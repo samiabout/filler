@@ -16,7 +16,7 @@ public class Board {
 	
 	static String couleurs=new String("auiepo");
 	
-	static int nbJoueurs=Player.nbPlayers;//élément de classe Player->changer nbJoueur par Player.nbPlayers
+	
 	
 	boolean autoset =false;//Developer
 	
@@ -29,7 +29,7 @@ public class Board {
 		Board.height = height;
 		Board.length = lenght;
 		Board.couleurs = couleurs;
-		Board.nbJoueurs = nbJoueurs;
+
 	}
 
 //——————————————————————————————————————————
@@ -47,10 +47,10 @@ public class Board {
 		if (
 				(table[0][0]==table[height-1][length-1])									||		//2 players
 				(	( 	table[height-1][0]==table[0][0] 				|| 
-						table[height-1][0]==table[height-1][length-1] ) 	&& nbJoueurs!=1 )||	//3 or 4 players//joueur 3, joueur en bas gauche
+						table[height-1][0]==table[height-1][length-1] ) 	&& Player.nbPlayers!=1 )||	//3 or 4 players//joueur 3, joueur en bas gauche
 				(	(	table[0][length-1]==table[0][0]					|| 
 						table[0][length-1]==table[height-1][0]			|| 
-						table[0][length-1]==table[height-1][length-1] ) && nbJoueurs==4)
+						table[0][length-1]==table[height-1][length-1] ) && Player.nbPlayers==4)
 				)
 				
 						{return creeTable();}//test que les deux joueurs n'ont pas la même couleur de départ
@@ -59,14 +59,14 @@ public class Board {
 	}
 	
 	public static int[][] creeTableControl(){//used only in setGame()
-		if(nbJoueurs==2){
+		if(Player.nbPlayers==2){
 			tableControl[0][0]=1;
 			tableControl[height-1][length-1]=2;
 		}
-		if(nbJoueurs==3){
+		if(Player.nbPlayers==3){
 			tableControl[height-1][0]=3;
 		}
-		if(nbJoueurs==4){
+		if(Player.nbPlayers==4){
 			tableControl[0][length-1]=4;
 		}
 		return tableControl;
@@ -76,7 +76,7 @@ public class Board {
 	public void setGame(){
 		if (autoset=false){
 				System.out.println("Choisir le nombre de joueurs");
-			nbJoueurs = sc.nextInt();
+			Player.nbPlayers = sc.nextInt();
 				System.out.println("Choisir la taille du plateau(longueur puis hauteur)");
 			length = sc.nextInt();
 			height = sc.nextInt();
