@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Board {
 	
-	Scanner sc  = new Scanner(System.in);
+	static Scanner sc  = new Scanner(System.in);
 	
 	static int tableControl[][];
 	static char table[][];
@@ -18,7 +18,7 @@ public class Board {
 	
 	
 	
-	boolean autoset =false;//Developer
+	static boolean autoset =false;//Developer
 	
 
 
@@ -73,7 +73,7 @@ public class Board {
 		
 	}
 	
-	public void setGame(){
+	public static void setGame(){
 		if (autoset=false){
 				System.out.println("Choisir le nombre de joueurs");
 			Player.nbPlayers = sc.nextInt();
@@ -99,27 +99,27 @@ public class Board {
 		}
 	}
 
-	public static void setCouleur(char choix,int joueur){//transforme le tableau avec les modifications couleurs
+	public static void setCouleur(){//transforme le tableau avec les modifications couleurs
     	for (int i=0; i<height;i++){
 			for(int j=0; j<length;j++){
-					if (tableControl[i][j]==joueur){
-						table[i][j]=choix;
+					if (tableControl[i][j]==Player.player){
+						table[i][j]=Player.choix;
 					}
 				}
 		}				
 	}
 	
-	public static void setControl(char choix,int joueur){//Board//transforme le tableauControl avec les modifications nouveau control
+	public static void setControl(){//Board//transforme le tableauControl avec les modifications nouveau control
     	boolean finModif=false;
     	while (!finModif){
     		finModif=true;
         	for (int i=0; i<height;i++){			//on balaie toutes les cases
     			for(int j=0; j<length;j++){		
-    				if (tableControl[i][j]==joueur){	//la case doit appartenir au joueur
-    					if (i>0)		{	if (table[i-1][j]==choix && tableControl[i-1][j]==0)	{tableControl[i-1][j]=joueur;finModif=false;} }
-    					if (i<height-1)	{	if (table[i+1][j]==choix && tableControl[i+1][j]==0)	{tableControl[i+1][j]=joueur;finModif=false;} }
-    					if (j>0)		{	if (table[i][j-1]==choix && tableControl[i][j-1]==0)	{tableControl[i][j-1]=joueur;finModif=false;} }
-    					if (j<length-1)	{	if (table[i][j+1]==choix && tableControl[i][j+1]==0)	{tableControl[i][j+1]=joueur;finModif=false;} }
+    				if (tableControl[i][j]==Player.player){	//la case doit appartenir au joueur
+    					if (i>0)		{	if (table[i-1][j]==Player.choix && tableControl[i-1][j]==0)	{tableControl[i-1][j]=Player.player;finModif=false;} }
+    					if (i<height-1)	{	if (table[i+1][j]==Player.choix && tableControl[i+1][j]==0)	{tableControl[i+1][j]=Player.player;finModif=false;} }
+    					if (j>0)		{	if (table[i][j-1]==Player.choix && tableControl[i][j-1]==0)	{tableControl[i][j-1]=Player.player;finModif=false;} }
+    					if (j<length-1)	{	if (table[i][j+1]==Player.choix && tableControl[i][j+1]==0)	{tableControl[i][j+1]=Player.player;finModif=false;} }
     				}//add conditions for hexagonal = true;
     			}
     		}

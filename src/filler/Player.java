@@ -2,6 +2,8 @@ package filler;
 
 import java.util.Scanner;
 
+import org.omg.CORBA.PRIVATE_MEMBER;
+
 public class Player {
 
 	static int player;
@@ -14,9 +16,11 @@ public class Player {
 	static char opponnentColor2;
 	static char opponnentColor3;
 	
-	static int noTour;
+	static int noTour=0;
 	
 	static int nbPlayers=2;//default value
+	
+	static char choix;
 	
 	public Player() {
 		// TODO Auto-generated constructor stub
@@ -37,7 +41,7 @@ public class Player {
 //——————————————————————————————————————————
 //—————————————————parameters initialization
 //——————————————————————————————————————————
-	private static void setTurnParameters() {
+	static void setTurnParameters() {
 		player=noTour%nbPlayers;
 		opponent1=(noTour+1)%nbPlayers;
 		opponent2=(noTour+2)%nbPlayers;
@@ -72,18 +76,20 @@ public class Player {
 //——————————————————————————————————————————
 //——————————————————————————————turn setting
 //——————————————————————————————————————————	
-	public static char demandeCouleur(int joueur , char opponnentColor){
-		System.out.println("joueur"+joueur);
+	public static char demandeCouleur(){
+		System.out.println("joueur"+player);
 		Scanner sc  = new Scanner(System.in);
-		char choix = sc.next().charAt(0);
+		choix = sc.next().charAt(0);
 		if (Board.couleurs.indexOf(choix)<0 || choix==opponnentColor1 || (choix==opponnentColor2&&nbPlayers!=1) ||(choix==opponnentColor3&&nbPlayers==4))	
-						{return demandeCouleur(joueur,opponnentColor);}//index du caractère choisi dans la liste couleurs(auiepo)
+						{return demandeCouleur();}//index du caractère choisi dans la liste couleurs(auiepo)
 		else {return choix;}
 	}
 	
+//——————————————————————————————————————————
+//————————————————————————————————final test
+//——————————————————————————————————————————
 
-
-	private static boolean indicationGagnant() {//indique la proprotion du pateau occupée par chaque joueur
+	static boolean indicationGagnant() {//indique la proprotion du pateau occupée par chaque joueur
 		int nbCase1=0;
 		int nbCase2=0;
 		int nbCase3=0;
@@ -105,16 +111,58 @@ public class Player {
     		System.out.println("le joueur 4 controle " + nbCase4 + "/" + Board.height*Board.length + " cases soit " + nbCase4*100/(Board.height*Board.length) + "% du plateau.");
     	}
     	
+    	int max=Math.max(Math.max(nbCase1, nbCase2),Math.max(nbCase3,nbCase4));
+    	boolean gagnant1=false;
+    	boolean gagnant2=false;
+    	boolean gagnant3=false;
+    	boolean gagnant4=false;
+    	int nbGagnant=0;
+    	
+    	
     	if (nbCase1>Board.height*Board.length/2 || 
     		nbCase2>Board.height*Board.length/2 ||
     		nbCase3>Board.height*Board.length/2 ||
     		nbCase4>Board.height*Board.length/2 ||
-    		nbCase1+nbCase2==Board.height*Board.length){		//teste=>passer de 2 à 4
-    		if (nbCase1>nbCase2){System.out.println("joueur 1 gagne");}
-    		else if (nbCase1<nbCase2){System.out.println("joueur 2 gagne");}
-    		else{System.out.println("égalité");}
+    		nbCase1+nbCase2+nbCase3+nbCase4==Board.height*Board.length){		//teste=>passer de 2 à 4
+    		if(nbCase1==max){
+    			gagnant1=true;
+    			nbGagnant++;
+    		}
+    		if(nbCase2==max){
+    			gagnant2=true;
+    			nbGagnant++;
+    		}
+    		if(nbCase3==max){
+    			gagnant3=true;
+    			nbGagnant++;
+    		}
+    		if(nbCase4==max){
+    			gagnant4=true;
+    			nbGagnant++;
+    		}
+    		if (nbGagnant==1){
+    			System.out.println("le gagnant est le joueur ");
+    			if(gagnant1){System.out.print("1");}
+    			if(gagnant2){System.out.print("2");}
+    			if(gagnant3){System.out.print("3");}
+    			if(gagnant4){System.out.print("4");}
+    			}
+    		if (nbGagnant>1){
+    			System.out.println("égalité entre les joueurs");
+    			if(gagnant1){System.out.println("1");}
+    			if(gagnant2){System.out.println("2");}
+    			if(gagnant3){System.out.println("3");}
+    			if(gagnant4){System.out.println("4");}
+    		}
+    	
+    		noTour++;	//no du tour suivant
     		return true;
+    		
     	}
-    	else{return false;}
+    	else{	
+    		noTour++;	//no du tour suivant
+    		return false;
+    		}
+    	
 	}
 }
