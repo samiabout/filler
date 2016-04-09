@@ -3,6 +3,8 @@ package filler;
 import java.util.Random;
 import java.util.Scanner;
 
+import sun.net.www.content.image.gif;
+
 //import org.omg.CORBA.PUBLIC_MEMBER;
 
 
@@ -22,7 +24,7 @@ public class Main {
 		
 		int nbPlayers=4;
 		
-		int noTour=1;
+		int noTour=0;
 		
 		Board board1 = new Board(1);
 		
@@ -38,12 +40,6 @@ public class Main {
 		board1.creeTable(nbPlayers);
 		board1.creeTableControl(nbPlayers);	
 	
-
-		/*board1.afficheTable();
-		System.out.println();
-		board1.afficheTableControl();*/
-		
-		
 		Player player1=new Player(1,nbPlayers);
 		Player player2=new Player(2,nbPlayers);
 		Player player3=new Player(3,nbPlayers);
@@ -66,40 +62,36 @@ public class Main {
 					break;
 				}
 			}*/
-		
-		//System.out.println("\njoueur 1 on haut à gauche \njoueur 2 en bas à droite \nle joueur 1 commence");	
-	   	 	
-	   	 	//int ntour=0;		//numéro du tour
-	   	 	//int joueur;			//no joueur en cours
-	   	 	//int adversaire;
-	        boolean fin = false;//utiliser pour boucler jusqu'à la fin du jeu
+
+			boolean fin = false;//utiliser pour boucler jusqu'à la fin du jeu
+			
+        	board1.afficheTable();
+				System.out.println();
+			board1.afficheTableControl();
 	       
-	        
 	        do{
 	        	
 	        	board1.toMaj();		//met toutes les cases controlées en majuscules
 	        	
-	        	board1.afficheTable();
-	        			System.out.println();
-	        	board1.afficheTableControl();
-	        	
 	        	char choix;  
-	        	
-	        	
-	        	switch ((noTour%nbPlayers)-1) {
-				case 0:choix=player1.demandeCouleur();
+	        	switch (noTour%nbPlayers) {
+				case 0:player1.setTurnParameters(board1);
+					choix=player1.demandeCouleur();
 					board1.setControl(choix,player1);//rajoute toutes les nouvelles cases controlées à tableControl
 					board1.setCouleur(choix,player1);	//transforme les couleurs dans table
 					break;
-				case 1:choix=player2.demandeCouleur();
+				case 1:player2.setTurnParameters(board1);
+					choix=player2.demandeCouleur();
 					board1.setControl(choix,player2);
 					board1.setCouleur(choix,player2);	
 					break;
-				case 2:choix=player3.demandeCouleur();
+				case 2:player3.setTurnParameters(board1);
+					choix=player3.demandeCouleur();
 					board1.setControl(choix,player3);
 					board1.setCouleur(choix,player3);	
 					break;
-				case 3:choix=player4.demandeCouleur();
+				case 3:player4.setTurnParameters(board1);
+					choix=player4.demandeCouleur();
 					board1.setControl(choix,player4);
 					board1.setCouleur(choix,player4);	
 				default:
@@ -107,6 +99,10 @@ public class Main {
 				}
 	        	
 	        	noTour++;
+	        	
+	        	board1.afficheTable();
+    				System.out.println();
+    			board1.afficheTableControl();
 	        	
 	        	fin=player1.indicationGagnant(board1); //renvoi un boolean utilisé pour la condition du while
 	           

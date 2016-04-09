@@ -13,8 +13,8 @@ public class Board {
 	private int tableControl[][]=new int[100][100];
 	private char table[][]=new char[100][100];
 	
-	private int height=7;//default value
-	private int length=7;//default value
+	private int height=4;//default value
+	private int length=4;//default value
 	boolean hexagonal=false;
 
 	
@@ -63,7 +63,7 @@ public class Board {
 				}
 		}
 		if (
-				(table[0][0]==table[this.height-1][this.length-1])									||		//2 players
+				(table[0][0]==table[this.height-1][this.length-1])			||		//2 players
 				(	( 	table[this.height-1][0]==table[0][0] 				|| 
 						table[this.height-1][0]==table[this.height-1][this.length-1] ) 	&& nbPlayers!=1 )||	//3 or 4 players//joueur 3, joueur en bas gauche
 				(	(	table[0][this.length-1]==table[0][0]					|| 
