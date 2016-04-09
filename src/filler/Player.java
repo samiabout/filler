@@ -5,164 +5,218 @@ import java.util.Scanner;
 import org.omg.CORBA.PRIVATE_MEMBER;
 
 public class Player {
+	
+	private int nbPlayers;
 
-	static int player;
-	static int opponent1;
-	static int opponent2;
-	static int opponent3;
+
+
+	private int player;
+	private int opponent1;
+	private int opponent2;
+	private int opponent3;
+
+	private char playerColor;
+	private char opponnentColor1;
+	private char opponnentColor2;
+	private char opponnentColor3;
+
+	public static int nbPlayer;// default value
+
+	private char choix;
+
 	
-	static char playerColor;
-	static char opponnentColor1;
-	static char opponnentColor2;
-	static char opponnentColor3;
-	
-	static int noTour=0;
-	
-	static int nbPlayers=2;//default value
-	
-	static char choix;
-	
-	public Player() {
-		// TODO Auto-generated constructor stub
+
+// ——————————————————————————————————————————
+// ——————————————————————————————constructors
+// ——————————————————————————————————————————
+
+	public Player(int player, int nbPlayers) {
+		this.player = player;
+		this.nbPlayers = nbPlayers;
+		
 	}
 	
-	public Player(int player, int opponent1, int opponent2, int opponent3, char opponnentColor1, char opponnentColor2,
-			char opponnentColor3, int noTour) {
-		super();
-		Player.player = player;
-		Player.opponent1 = opponent1;
-		Player.opponent2 = opponent2;
-		Player.opponent3 = opponent3;
-		Player.opponnentColor1 = opponnentColor1;
-		Player.opponnentColor2 = opponnentColor2;
-		Player.opponnentColor3 = opponnentColor3;
-		Player.noTour = noTour;
-	}
 //——————————————————————————————————————————
-//—————————————————parameters initialization
+//—————————————————————————getters & setters
 //——————————————————————————————————————————
-	static void setTurnParameters() {
-		player=noTour%nbPlayers;
-		opponent1=(noTour+1)%nbPlayers;
-		opponent2=(noTour+2)%nbPlayers;
-		opponent3=(noTour+3)%nbPlayers;
-		if (player==1){
-			playerColor=Board.table[0][0];
-			opponnentColor1=Board.table[Board.height-1][Board.length-1];
-			opponnentColor2=Board.table[Board.height-1][0];
-			opponnentColor3=Board.table[0][Board.length-1];
-		}
-		if (player==2){
-			playerColor=Board.table[Board.height-1][Board.length-1];
-			opponnentColor1=Board.table[0][0];
-			opponnentColor2=Board.table[Board.height-1][0];
-			opponnentColor3=Board.table[0][Board.length-1];
-		}
-		if (player==3){
-			playerColor=Board.table[Board.height-1][0];
-			opponnentColor1=Board.table[0][0];
-			opponnentColor2=Board.table[Board.height-1][Board.length-1];
-			opponnentColor3=Board.table[0][Board.length-1];
-		}
-		if (player==4){
-			playerColor=Board.table[0][Board.length-1];
-			opponnentColor1=Board.table[0][0];
-			opponnentColor2=Board.table[Board.height-1][Board.length-1];
-			opponnentColor3=Board.table[Board.height-1][0];
-		}
+
+	public int player() {
+		return this.player;
 	}
 	
+// ——————————————————————————————————————————
+// —————————————————parameters initialization
+// ——————————————————————————————————————————
 	
-//——————————————————————————————————————————
-//——————————————————————————————turn setting
-//——————————————————————————————————————————	
-	public static char demandeCouleur(){
-		System.out.println("joueur"+player);
-		Scanner sc  = new Scanner(System.in);
+	public void setTurnParameters(Board board) {
+		char[][]table = board.table();
+		//int[][]tableControl = board.tableControl();
+		int height = board.height();
+		int length = board.length();
+		
+		/*this.player = noTour % this.nbPlayers;
+		this.opponent1 = (noTour + 1) % this.nbPlayers;
+		this.opponent2 = (noTour + 2) % this.nbPlayers;
+		this.opponent3 = (noTour + 3) % this.nbPlayers;*/
+		if (this.player == 1) {
+			this.playerColor = table[0][0];
+			this.opponnentColor1 = table[height - 1][length - 1];
+			this.opponnentColor2 = table[height - 1][0];
+			this.opponnentColor3 = table[0][length - 1];
+		}
+		if (this.player == 2) {
+			this.playerColor = table[height - 1][length - 1];
+			this.opponnentColor1 = table[0][0];
+			this.opponnentColor2 = table[height - 1][0];
+			this.opponnentColor3 = table[0][length - 1];
+		}
+		if (this.player == 3) {
+			this.playerColor = table[height - 1][0];
+			this.opponnentColor1 = table[0][0];
+			this.opponnentColor2 = table[height - 1][length - 1];
+			this.opponnentColor3 = table[0][length - 1];
+		}
+		if (this.player == 4) {
+			this.playerColor = table[0][length - 1];
+			this.opponnentColor1 = table[0][0];
+			this.opponnentColor2 = table[height - 1][length - 1];
+			this.opponnentColor3 = table[height - 1][0];
+		}
+	}
+
+	// ——————————————————————————————————————————
+	// ——————————————————————————————turn setting
+	// ——————————————————————————————————————————
+	
+	public char demandeCouleur() {
+		char choix;
+		System.out.println("joueur" + this.player);
+		Scanner sc = new Scanner(System.in);
 		choix = sc.next().charAt(0);
-		if (Board.couleurs.indexOf(choix)<0 || choix==opponnentColor1 || (choix==opponnentColor2&&nbPlayers!=1) ||(choix==opponnentColor3&&nbPlayers==4))	
-						{return demandeCouleur();}//index du caractère choisi dans la liste couleurs(auiepo)
-		else {return choix;}
-	}
-	
-//——————————————————————————————————————————
-//————————————————————————————————final test
-//——————————————————————————————————————————
-
-	static boolean indicationGagnant() {//indique la proprotion du pateau occupée par chaque joueur
-		int nbCase1=0;
-		int nbCase2=0;
-		int nbCase3=0;
-		int nbCase4=0;
-    	for (int i=0; i<Board.height;i++){
-			for(int j=0; j<Board.length;j++){
-					if (Board.tableControl[i][j]==1){nbCase1++;}
-					if (Board.tableControl[i][j]==2){nbCase2++;}
-					if (Board.tableControl[i][j]==3){nbCase3++;}
-					if (Board.tableControl[i][j]==4){nbCase4++;}
-				}
+		if (Board.couleurs.indexOf(choix) < 0 || 
+			choix == this.playerColor ||
+			choix == this.opponnentColor1 || 
+			(choix == this.opponnentColor2 && this.nbPlayers != 1) || 
+			(choix == this.opponnentColor3 && this.nbPlayers == 4)) {
+			return demandeCouleur();
+		} // index du caractère choisi dans la liste couleurs(auiepo)
+		else {
+			return choix;
 		}
-    	System.out.println("le joueur 1 controle " + nbCase1 + "/" + Board.height*Board.length + " cases soit " + nbCase1*100/(Board.height*Board.length) + "% du plateau.");
-    	System.out.println("le joueur 2 controle " + nbCase2 + "/" + Board.height*Board.length + " cases soit " + nbCase2*100/(Board.height*Board.length) + "% du plateau.");	
-    	if(nbPlayers!=1){
-    		System.out.println("le joueur 3 controle " + nbCase3 + "/" + Board.height*Board.length + " cases soit " + nbCase3*100/(Board.height*Board.length) + "% du plateau.");
-    	}
-    	if(nbPlayers==4){
-    		System.out.println("le joueur 4 controle " + nbCase4 + "/" + Board.height*Board.length + " cases soit " + nbCase4*100/(Board.height*Board.length) + "% du plateau.");
-    	}
-    	
-    	int max=Math.max(Math.max(nbCase1, nbCase2),Math.max(nbCase3,nbCase4));
-    	boolean gagnant1=false;
-    	boolean gagnant2=false;
-    	boolean gagnant3=false;
-    	boolean gagnant4=false;
-    	int nbGagnant=0;
-    	
-    	
-    	if (nbCase1>Board.height*Board.length/2 || 
-    		nbCase2>Board.height*Board.length/2 ||
-    		nbCase3>Board.height*Board.length/2 ||
-    		nbCase4>Board.height*Board.length/2 ||
-    		nbCase1+nbCase2+nbCase3+nbCase4==Board.height*Board.length){		//teste=>passer de 2 à 4
-    		if(nbCase1==max){
-    			gagnant1=true;
-    			nbGagnant++;
-    		}
-    		if(nbCase2==max){
-    			gagnant2=true;
-    			nbGagnant++;
-    		}
-    		if(nbCase3==max){
-    			gagnant3=true;
-    			nbGagnant++;
-    		}
-    		if(nbCase4==max){
-    			gagnant4=true;
-    			nbGagnant++;
-    		}
-    		if (nbGagnant==1){
-    			System.out.println("le gagnant est le joueur ");
-    			if(gagnant1){System.out.print("1");}
-    			if(gagnant2){System.out.print("2");}
-    			if(gagnant3){System.out.print("3");}
-    			if(gagnant4){System.out.print("4");}
-    			}
-    		if (nbGagnant>1){
-    			System.out.println("égalité entre les joueurs");
-    			if(gagnant1){System.out.println("1");}
-    			if(gagnant2){System.out.println("2");}
-    			if(gagnant3){System.out.println("3");}
-    			if(gagnant4){System.out.println("4");}
-    		}
-    	
-    		noTour++;	//no du tour suivant
-    		return true;
-    		
-    	}
-    	else{	
-    		noTour++;	//no du tour suivant
-    		return false;
-    		}
-    	
 	}
+
+	// ——————————————————————————————————————————
+	// ————————————————————————————————final test
+	// ——————————————————————————————————————————
+
+	boolean indicationGagnant(Board board) {// indique la proprotion du pateau
+										// occupée par chaque joueur
+		//char[][]table = board.table();
+		int[][]tableControl = board.tableControl();
+		int height = board.height();
+		int length = board.length();
+		
+		int nbCase1 = 0;
+		int nbCase2 = 0;
+		int nbCase3 = 0;
+		int nbCase4 = 0;
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < length; j++) {
+				if (tableControl[i][j] == 1) {
+					nbCase1++;
+				}
+				if (tableControl[i][j] == 2) {
+					nbCase2++;
+				}
+				if (tableControl[i][j] == 3) {
+					nbCase3++;
+				}
+				if (tableControl[i][j] == 4) {
+					nbCase4++;
+				}
+			}
+		}
+		System.out.println("le joueur 1 controle " + nbCase1 + "/" + height * length + " cases soit "
+				+ nbCase1 * 100 / (height * length) + "% du plateau.");
+		System.out.println("le joueur 2 controle " + nbCase2 + "/" + height * length + " cases soit "
+				+ nbCase2 * 100 / (height * length) + "% du plateau.");
+		if (this.nbPlayers != 1) {
+			System.out.println("le joueur 3 controle " + nbCase3 + "/" + height * length + " cases soit "
+					+ nbCase3 * 100 / (height * length) + "% du plateau.");
+		}
+		if (this.nbPlayers == 4) {
+			System.out.println("le joueur 4 controle " + nbCase4 + "/" + height * length + " cases soit "
+					+ nbCase4 * 100 / (height * length) + "% du plateau.");
+		}
+
+		int max = Math.max(Math.max(nbCase1, nbCase2), Math.max(nbCase3, nbCase4));
+		boolean gagnant1 = false;
+		boolean gagnant2 = false;
+		boolean gagnant3 = false;
+		boolean gagnant4 = false;
+		int nbGagnant = 0;
+
+		if (nbCase1 > height * length / 2 || nbCase2 > height * length / 2
+				|| nbCase3 > height * length / 2 || nbCase4 > height * length / 2
+				|| nbCase1 + nbCase2 + nbCase3 + nbCase4 == height * length) { // teste=>passer
+																							// de
+																							// 2
+																							// à
+																							// 4
+			if (nbCase1 == max) {
+				gagnant1 = true;
+				nbGagnant++;
+			}
+			if (nbCase2 == max) {
+				gagnant2 = true;
+				nbGagnant++;
+			}
+			if (nbCase3 == max) {
+				gagnant3 = true;
+				nbGagnant++;
+			}
+			if (nbCase4 == max) {
+				gagnant4 = true;
+				nbGagnant++;
+			}
+			if (nbGagnant == 1) {
+				System.out.println("le gagnant est le joueur ");
+				if (gagnant1) {
+					System.out.print("1");
+				}
+				if (gagnant2) {
+					System.out.print("2");
+				}
+				if (gagnant3) {
+					System.out.print("3");
+				}
+				if (gagnant4) {
+					System.out.print("4");
+				}
+			}
+			if (nbGagnant > 1) {
+				System.out.println("égalité entre les joueurs");
+				if (gagnant1) {
+					System.out.println("1");
+				}
+				if (gagnant2) {
+					System.out.println("2");
+				}
+				if (gagnant3) {
+					System.out.println("3");
+				}
+				if (gagnant4) {
+					System.out.println("4");
+				}
+			}
+
+			return true;
+
+		} else {
+			return false;
+		}
+
+	}
+
+
 }
