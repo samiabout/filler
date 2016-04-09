@@ -96,7 +96,7 @@ public class Player {
 		if (Board.couleurs.indexOf(choix) < 0 || 
 			choix == this.playerColor ||
 			choix == this.opponnentColor1 || 
-			(choix == this.opponnentColor2 && this.nbPlayers != 1) || 
+			(choix == this.opponnentColor2 && this.nbPlayers != 2) || 
 			(choix == this.opponnentColor3 && this.nbPlayers == 4)) {
 			return demandeCouleur();
 		} // index du caractère choisi dans la liste couleurs(auiepo)
@@ -140,7 +140,7 @@ public class Player {
 				+ nbCase1 * 100 / (height * length) + "% du plateau.");
 		System.out.println("le joueur 2 controle " + nbCase2 + "/" + height * length + " cases soit "
 				+ nbCase2 * 100 / (height * length) + "% du plateau.");
-		if (this.nbPlayers != 1) {
+		if (this.nbPlayers != 2) {
 			System.out.println("le joueur 3 controle " + nbCase3 + "/" + height * length + " cases soit "
 					+ nbCase3 * 100 / (height * length) + "% du plateau.");
 		}

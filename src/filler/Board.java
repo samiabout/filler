@@ -13,8 +13,8 @@ public class Board {
 	private int tableControl[][]=new int[100][100];
 	private char table[][]=new char[100][100];
 	
-	private int height=13;//default value
-	private int length=13;//default value
+	private int height=7;//default value
+	private int length=7;//default value
 	boolean hexagonal=false;
 
 	
@@ -79,11 +79,9 @@ public class Board {
 	
 	
 	public void creeTableControl(int nbPlayers){//used only in setGame()
-		if(nbPlayers==2){
 			this.tableControl[0][0]=1;
 			this.tableControl[this.height-1][this.length-1]=2;
-		}
-		if(nbPlayers==3){
+		if(nbPlayers!=2){
 			this.tableControl[this.height-1][0]=3;
 		}
 		if(nbPlayers==4){

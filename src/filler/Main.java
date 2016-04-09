@@ -18,11 +18,11 @@ public class Main {
 		
 	public static void main(String[] args){
 		
-		boolean autoset =false;//Developer
+		boolean autoset =true;//Developer
 		
-		int nbPlayers=2;
+		int nbPlayers=4;
 		
-		int noTour=0;
+		int noTour=1;
 		
 		Board board1 = new Board(1);
 		
@@ -39,9 +39,9 @@ public class Main {
 		board1.creeTableControl(nbPlayers);	
 	
 
-		board1.afficheTable();
+		/*board1.afficheTable();
 		System.out.println();
-		board1.afficheTableControl();
+		board1.afficheTableControl();*/
 		
 		
 		Player player1=new Player(1,nbPlayers);
@@ -75,11 +75,8 @@ public class Main {
 	        boolean fin = false;//utiliser pour boucler jusqu'à la fin du jeu
 	       
 	        
-	        
 	        do{
 	        	
-
-
 	        	board1.toMaj();		//met toutes les cases controlées en majuscules
 	        	
 	        	board1.afficheTable();
@@ -89,41 +86,31 @@ public class Main {
 	        	char choix;  
 	        	
 	        	
-	        	switch (noTour%nbPlayers) {
-				case 1:choix=player1.demandeCouleur();
+	        	switch ((noTour%nbPlayers)-1) {
+				case 0:choix=player1.demandeCouleur();
 					board1.setControl(choix,player1);//rajoute toutes les nouvelles cases controlées à tableControl
 					board1.setCouleur(choix,player1);	//transforme les couleurs dans table
 					break;
-				case 2:choix=player2.demandeCouleur();
+				case 1:choix=player2.demandeCouleur();
 					board1.setControl(choix,player2);
 					board1.setCouleur(choix,player2);	
 					break;
-				case 3:choix=player3.demandeCouleur();
+				case 2:choix=player3.demandeCouleur();
 					board1.setControl(choix,player3);
 					board1.setCouleur(choix,player3);	
 					break;
-				case 4:choix=player4.demandeCouleur();
+				case 3:choix=player4.demandeCouleur();
 					board1.setControl(choix,player4);
 					board1.setCouleur(choix,player4);	
 				default:
 					break;
 				}
 	        	
-	        	
-	        	
-	        	
-	        	
-	        	
-	        	       	
-	        	
+	        	noTour++;
 	        	
 	        	fin=player1.indicationGagnant(board1); //renvoi un boolean utilisé pour la condition du while
 	           
-	        	
 	       		System.out.println();
-	        	
-	        	
-	           
 	        	
 	        }while(!fin);
 	}
