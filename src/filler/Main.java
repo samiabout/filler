@@ -22,7 +22,7 @@ public class Main {
 		
 		boolean autoset =true;//Developer
 		
-		int nbPlayers=4;
+		int nbPlayers=2;
 		
 		int noTour=0;
 		
@@ -64,7 +64,7 @@ public class Main {
 			}*/
 
 			boolean fin = false;//utiliser pour boucler jusqu'à la fin du jeu
-			
+			board1.toMaj();	
         	board1.afficheTable();
 				System.out.println();
 			board1.afficheTableControl();
@@ -99,6 +99,8 @@ public class Main {
 				}
 	        	
 	        	noTour++;
+	        	
+	        	board1.toMaj();	
 	        	
 	        	board1.afficheTable();
     				System.out.println();

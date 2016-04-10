@@ -29,7 +29,9 @@ public class Player {
 	public Player(int player, int nbPlayers) {
 		this.player = player;
 		this.nbPlayers = nbPlayers;
-		
+		this.opponent1=(player+1)%nbPlayers;
+		if (nbPlayers!=2){this.opponent2=(player+2)%nbPlayers;}
+		if (nbPlayers==4){this.opponent3=(player+3)%nbPlayers;}
 	}
 	
 //——————————————————————————————————————————
@@ -38,6 +40,18 @@ public class Player {
 
 	public int player() {
 		return this.player;
+	}
+	
+	public int opponent1() {
+		return opponent1;
+	}
+	
+	public int opponent2() {
+		return opponent2;
+	}
+	
+	public int opponent3() {
+		return opponent3;
 	}
 	
 	
