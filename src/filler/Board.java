@@ -13,7 +13,7 @@ public class Board {
 
 	private int noTable;
 	
-
+	static int caca=6;
 	
 	private int tableControl[][]=new int[100][100];
 	private char table[][]=new char[100][100];
@@ -136,14 +136,24 @@ public class Board {
     			}
     		}
     	}
-    	for (int i = 0; i < this.height; i++) {
-    		for (int j = 0; j < this.length; j++) {
-				if (islet(i, j, player)){System.out.println("a");
-					this.tableControl[i][j]=6;//player.player();
+    	boolean islet=true;
+    	while (islet){
+    		islet=false;
+	    	for (int i = 0; i < this.height; i++) {
+	    		for (int j = 0; j < this.length; j++) {
+	    			if (this.tableControl[i][j]==0){
+						if (islet(i, j, player)){System.out.println("a");
+							this.tableControl[i][j]=caca;caca++;//player.player();
+							islet=true;
+						}
+	    			}
+	    			
+					// System.out.println("b");
 				}
-			}
-			
-		}
+				
+			}	
+    	}
+
 	}
 
 //——————————————————————————————————————————
@@ -161,73 +171,160 @@ public class Board {
 		}
 		return false;
 	}
+	public int neighborTypeAmount(int i,int j,int type) {//does the tile have a neighbor of number type?
+		int amount=0;
+		//int type=this.tableControl[i][j];
+		if (i>0)				{	if (this.tableControl[i-1][j]==type)	{amount++;} }
+		if (i<this.height-1)	{	if (this.tableControl[i+1][j]==type)	{amount++;} }
+		if (j>0)				{	if (this.tableControl[i][j-1]==type)	{amount++;} }
+		if (j<this.length-1)	{	if (this.tableControl[i][j+1]==type)	{amount++;} }
+		if (hexagonal){
+			//to do
+		}
+		return amount;
+	}
 	
+	public int[] neighborTypePlace(int i,int j,int type) {//does the tile have a neighbor of number type?
+		//int type=this.tableControl[i][j];
+		int[] nbNeighbor=new int[4] ;
+		if (i>0)				{	if (this.tableControl[i-1][j]==type)	{nbNeighbor[0]=1;} }
+		if (j<this.length-1)	{	if (this.tableControl[i][j+1]==type)	{nbNeighbor[1]=1;} }
+		if (i<this.height-1)	{	if (this.tableControl[i+1][j]==type)	{nbNeighbor[2]=1;} }
+		if (j>0)				{	if (this.tableControl[i][j-1]==type)	{nbNeighbor[3]=1;} }
+		if (hexagonal){
+			//to do
+		}
+		return nbNeighbor;
+	}
 	
-
+	public boolean isHeadIslet(int i,int j,int type) {
+		if (neighborTypeAmount(i, j, type)==0){
+			return true;
+		}
+		else if (neighborTypeAmount(i, j, type)==1){
+			return true;
+		}
+		else if(neighborTypeAmount(i, j, type)==2){
+		boolean head=false;
+		int neighborArray[]=neighborTypePlace(i, j, type);
+		for (int k = 0; k <4; k++) {
+			if (neighborArray[k]==1 && neighborArray[k]==neighborArray[(k+1)%4]){
+				head=true;
+			}
+		}
+		return head;}
+		else{
+			return false;
+		}
+	}
 	
 	public boolean islet(int i, int j, Player player) {//prépare la fonction isletParameterized() avec les paramètres nécéssaires
 		int ibeginning = i;
 		int jbeginning = j;
 		int type = 0;
+		//System.out.println(i +" " + j);
 		boolean beginning = true;
-		return  isletParameterized(	i, 			//ordonnée
-									j,			//abscisse
-									i,			//la lecture a une direction, elle se fait en foncton de la position de la case précédent
-									j+1,		//ici, on suppose qu'elle était en dessous
-									ibeginning,	//ordonnée de départ pour savoir quand on a fait un tour
-									jbeginning, //ordonnée de départ pour savoir quand on a fait un tour
-									player, 	//numéro du joueur qui encercle l'isle
-									type, 		//numéro des cases de l'ile (ici 0)
-									beginning); //savoir on a bouclé =>commence à true puis est à false dès le deuxième test
+		if(this.isHeadIslet(i, j, type)){
+			int neighborArray[]=neighborTypePlace(i, j, type);
+			if (neighborArray[2]==1 && neighborArray[3]==1){
+			System.out.println("est une tête");	
+			return  isletParameterized(	i, 			//ordonnée
+										j,			//abscisse
+										i,			//la lecture a une direction, elle se fait en foncton de la position de la case précédent
+										j+1,		//ici, on suppose qu'elle était en dessous
+										ibeginning,	//ordonnée de départ pour savoir quand on a fait un tour
+										jbeginning, //ordonnée de départ pour savoir quand on a fait un tour
+										player, 	//numéro du joueur qui encercle l'isle
+										type, 		//numéro des cases de l'ile (ici 0)
+										beginning); //savoir on a bouclé =>commence à true puis est à false dès le deuxième test
+			}else {
+			System.out.println("est une tête");	
+			return  isletParameterized(	i, 			//ordonnée
+										j,			//abscisse
+										i+1,			//la lecture a une direction, elle se fait en foncton de la position de la case précédent
+										j,		//ici, on suppose qu'elle était en dessous
+										ibeginning,	//ordonnée de départ pour savoir quand on a fait un tour
+										jbeginning, //ordonnée de départ pour savoir quand on a fait un tour
+										player, 	//numéro du joueur qui encercle l'isle
+										type, 		//numéro des cases de l'ile (ici 0)
+										beginning); //savoir on a bouclé =>commence à true puis est à false dès le deuxième test
+			}
+		}
+		else{System.out.println("n'est pas une tête");return false;}
+		//return false;
 	}
 	
 	
 	public boolean isletParameterized(int i, int j,int iprevious,int jprevious, int ibeginning,int jbeginning,Player player,int type, boolean beginning) {//does the tile belong to an islet?
+		/*System.out.println(player.opponent1() +" "+ player.opponent2() + " " + player.opponent3());
+		System.out.println( (this.tableControl[i][j]==type)   +" "+
+				!this.neighborType(i, j, player.opponent1()) +" "+
+				!this.neighborType(i, j, player.opponent2()) +" "+
+				!this.neighborType(i, j, player.opponent3()) );*/
+
+		if(		this.tableControl[i][j]==type &&
+				!this.neighborType(i, j, player.opponent1()) &&
+				!this.neighborType(i, j, player.opponent2()) &&
+				!this.neighborType(i, j, player.opponent3())	  ){
+			
+		System.out.println(i +" " + j);
+		if (neighborTypeAmount(i, j, type)==0){
+			return true;
+		}
 		
 		//clockwise turning, to circle the islet
-		if (this.tableControl[i][j]==type  &&  //test que la case de départ n'appartient à personne et que on a pas déjà fait un tour pour éviter de tourner en rond indéfiniment
-			!(this.tableControl[i][j]==this.tableControl[ibeginning][jbeginning] && !beginning)){//clockwise turning to circle the islet (nand)
+		//System.out.println( ((i,j]==this.tableControl[ibeginning][jbeginning]) +" "+ !beginning));
+		if (
+			this.tableControl[i][j]==type  &&  //test que la case de départ n'appartient à personne et que on a pas déjà fait un tour pour éviter de tourner en rond indéfiniment
+			!(i==ibeginning && j ==jbeginning && !beginning)){//clockwise turning to circle the islet (nand)
+			
+			
+			//————————————————————————
+			  System.out.println("c");
+			//————————————————————————
+			
 			
 			int start = 0; //détermine la position de la case précédente pour chosir par quel bout on commence
 			if (j==jprevious){
-				if (iprevious==i-1){start=2;}//case précédente était à gauche
-				if (iprevious==i+1){start=4;}//à droite
+				if (iprevious==i-1){start=3;}//case précédente était à gauche	2
+				if (iprevious==i+1){start=1;}//à droite	4
 			}
 			if (i==iprevious){
-				if (jprevious==j+1){start=1;}//en bas
-				if (jprevious==j-1){start=3;}//en haut
+				if (jprevious==j+1){start=0;}//en bas	1
+				if (jprevious==j-1){start=2;}//en haut	3
 			}
 			
 			for (int k = start; k < 4+start; k++) {//permet de commencer par la case départ
+				System.out.println(k +"k"+ k%4 + "start" + start);
 				switch (k%4) {
 				
-				case 1:
-					if (i<this.height-1)	{	if (this.tableControl[i+1][j]==type &&   
+				case 0:
+					if (i<this.height-1)	{	if (this.tableControl[i+1][j]==type /*&&   
 													!this.neighborType(i+1, j,player.opponent1()) &&
 													!this.neighborType(i+1, j,player.opponent2()) &&
-													!this.neighborType(i+1, j,player.opponent3()) )
+													!this.neighborType(i+1, j,player.opponent3()) */)
 														{return isletParameterized(i+1, j,i,j, ibeginning, jbeginning, player, type,false);} }
 					break;
-				case 2:
-					if (j>0)				{	if (this.tableControl[i][j-1]==type &&   
+				case 1:
+					if (j>0)				{	if (this.tableControl[i][j-1]==type /*&&   
 													!this.neighborType(i, j-1,player.opponent1()) &&
 													!this.neighborType(i, j-1,player.opponent2()) &&
-													!this.neighborType(i, j-1,player.opponent3()) )
+													!this.neighborType(i, j-1,player.opponent3()) */)
 														{return isletParameterized(i, j-1,i,j, ibeginning, jbeginning, player, type,false);} }
 					break;					
-				case 3:
-					if (i>0)				{	if (this.tableControl[i-1][j]==type &&   //if the tile==0 neighbor no opponent as neighbor
+				case 2:
+					if (i>0)				{	if (this.tableControl[i-1][j]==type /*&&   //if the tile==0 neighbor no opponent as neighbor
 													!this.neighborType(i-1, j,player.opponent1()) &&
 													!this.neighborType(i-1, j,player.opponent2()) &&
-													!this.neighborType(i-1, j,player.opponent3()) )
-														{return isletParameterized(i-1, j,i,j, ibeginning, jbeginning, player, type,false);} //therefore, we test the neighbor
+													!this.neighborType(i-1, j,player.opponent3())*/ )
+														{return isletParameterized(i-1, j,i,j, ibeginning, jbeginning, player, type,false);}} //therefore, we test the neighbor
 					break;
-				}
-				case 0:
-					if (j<this.length-1)	{	if (this.tableControl[i][j+1]==type &&   
+				
+				case 3:
+					if (j<this.length-1)	{	if (this.tableControl[i][j+1]==type /*&&   
 													!this.neighborType(i, j+1,player.opponent1()) &&
 													!this.neighborType(i, j+1,player.opponent2()) &&
-													!this.neighborType(i, j+1,player.opponent3()) )
+													!this.neighborType(i, j+1,player.opponent3())*/ )
 														{return isletParameterized(i, j+1,i,j, ibeginning, jbeginning, player, type,false);} }		
 					break;
 					
@@ -236,8 +333,22 @@ public class Board {
 					}//end switch
 				}//end for
 		}
-		if(this.tableControl[i][j]==type  &&  this.tableControl[i][j]==this.tableControl[ibeginning][jbeginning] && !beginning){return true;}
-		System.out.println("oépo");
+		if(this.tableControl[i][j]==type  &&  i==ibeginning && j==jbeginning && !beginning //||
+			//this.neighborType(i, j, player.player()) 
+				){
+			//————————————————————————
+			System.out.println("deeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");return true;
+			//————————————————————————
+		}
+
+		
+		//————————————————————————
+		System.out.println("e");
+		//————————————————————————
+		
+		
+		return false;
+		}
 		return false;
 	}
 	

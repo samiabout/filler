@@ -98,6 +98,7 @@ public class Main {
 					break;
 				}
 	        	
+	        	
 	        	noTour++;
 	        	
 	        	board1.toMaj();	
