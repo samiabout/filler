@@ -8,27 +8,52 @@ import org.w3c.dom.css.ElementCSSInlineStyle;
 import com.sun.glass.ui.CommonDialogs.Type;
 import com.sun.jndi.url.iiopname.iiopnameURLContextFactory;
 
+import jdk.internal.org.objectweb.asm.tree.IntInsnNode;
+
 
 public class Board {
 
-	private int noTable;
+	int nbPlayers;//default value
 	
 	static int caca=6;
 	
 	private int tableControl[][]=new int[100][100];
 	private char table[][]=new char[100][100];
 	
-	private int height=10;//default value
-	private int length=10 ;//default value
-	boolean hexagonal=false;
-
+	private int height;//default value
+	private int length;//default value
+	
+	//avancé
+	boolean hexagonal;
+	boolean obstacles=false;
+	double obstaclesAmount=0;
 	
 	final static String couleurs=new String("auiepo");
 	
-	public Board(int noTable) {
-		this.noTable=noTable;
+//——————————————————————————————————————————
+//——————————————————————————————constructors
+//——————————————————————————————————————————	
+	
+	public Board(int height, int length, int nbPlayers, boolean hexagonal, boolean obstacles , double obstaclesAmount) {
+		this.height=height;
+		this.length=length;
+		this.nbPlayers=nbPlayers;
+		
+		this.hexagonal=hexagonal;
+		this.obstacles=obstacles;
+		this.obstaclesAmount=obstaclesAmount;
+		
+		this.creeTableControl(nbPlayers);
+		this.creeTable(nbPlayers);
+		this.setObstacles();
 
+		this.toMaj();	
+		this.afficheTable();
+			System.out.println();
+		this.afficheTableControl();
 	}
+	
+	public Board(){ }
 //——————————————————————————————————————————
 //—————————————————————————getters & setters
 //——————————————————————————————————————————	
@@ -59,6 +84,18 @@ public class Board {
 //——————————————————————————————————————————
 //———————————————————————game initialization
 //——————————————————————————————————————————
+	
+	public void creeTableControl(int nbPlayers){//used only in setGame()
+			this.tableControl[0][0]=1;
+			this.tableControl[this.height-1][this.length-1]=2;
+		if(nbPlayers!=2){
+			this.tableControl[this.height-1][0]=3;
+		}
+		if(nbPlayers==4){
+			this.tableControl[0][this.length-1]=4;
+		}
+	}
+	
 	public char[][] creeTable(int nbPlayers){//used only in setGame()
 		Random r=new Random();
 		//String couleurs="auiepo";//"rojvbi"
@@ -70,7 +107,7 @@ public class Board {
 		if (
 				(table[0][0]==table[this.height-1][this.length-1])			||		//2 players
 				(	( 	table[this.height-1][0]==table[0][0] 				|| 
-						table[this.height-1][0]==table[this.height-1][this.length-1] ) 	&& nbPlayers!=1 )||	//3 or 4 players//joueur 3, joueur en bas gauche
+						table[this.height-1][0]==table[this.height-1][this.length-1] ) 	&& nbPlayers!=2 )||	//3 or 4 players//joueur 3, joueur en bas gauche
 				(	(	table[0][this.length-1]==table[0][0]					|| 
 						table[0][this.length-1]==table[this.height-1][0]			|| 
 						table[0][this.length-1]==table[this.height-1][this.length-1] ) && nbPlayers==4)
@@ -78,19 +115,81 @@ public class Board {
 				
 						{return creeTable(nbPlayers);}//test que les deux joueurs n'ont pas la même couleur de départ
 		
-		else{return table;
+		else{
+
+			return table;
 			}
 		}
 	
+
 	
-	public void creeTableControl(int nbPlayers){//used only in setGame()
-			this.tableControl[0][0]=1;
-			this.tableControl[this.height-1][this.length-1]=2;
-		if(nbPlayers!=2){
-			this.tableControl[this.height-1][0]=3;
+	//mappage avancé
+	public boolean isDeadable(int i, int j, int nbPlayers) {//la case est au bord du terrain et éloignée de 5 du départ
+		if(		(i<5 && j<5 )	||  
+				(i>this.height-6 && j>this.length-6) ||
+				(i>this.height-6 && j<5 && nbPlayers!=2) ||
+				(i<5 && j>this.length-6 && nbPlayers==4) 
+				){
+			return false;
 		}
-		if(nbPlayers==4){
-			this.tableControl[0][this.length-1]=4;
+		else{
+			return true;
+		}
+	}
+	
+	public boolean probability (double proba){
+		double nb=Math.random();
+		if (nb*100<proba){
+			return true;
+		}
+		else return false;
+	}
+	
+	public void setObstacles() {
+		if(obstacles){
+			
+			double quantity=(obstaclesAmount/100);
+			if(quantity>0.3){quantity=0.3; }
+			
+			int nbDeadTiles=0;
+				
+			int nbTest=0;
+			int nbWhile=0;
+			
+			System.out.println(quantity);
+			System.out.println((this.height*this.length-4*5*5)*quantity);
+			while(  nbDeadTiles<( (this.height*this.length-4*5*5)*quantity )  ){ //on tue 10% des cases tuables
+				nbWhile++;
+				for (int i = 0; i < this.height; i++) {
+					for (int j = 0; j < this.length; j++) {
+						nbTest++;
+						if(isDeadable(i, j, this.nbPlayers) && probability(0.006) ){//toute les cases tuables du plateau
+							this.tableControl[i][j]=-1;
+							nbDeadTiles++;
+						}
+						if(isOnBorder(i, j)&& isDeadable(i, j, this.nbPlayers) && probability(0.05)){//la case est sur le bord est tuable
+							this.tableControl[i][j]=-2;
+							nbDeadTiles++;
+						}
+						if(!isOnBorder(i, j) && isDeadable(i, j, this.nbPlayers) && neighborType(i, j, -1) && probability(0.2)){//la case est voisine à une case morte et est tuable
+							this.tableControl[i][j]=-1;
+							nbDeadTiles++;
+						}
+						if(isOnBorder(i, j) && isDeadable(i, j, this.nbPlayers) && neighborType(i, j, -2) && probability(0.3)){//la case est voisine à une case morte2du bord et est tuable
+							this.tableControl[i][j]=-2;
+							nbDeadTiles++;
+						}
+						if(!isOnBorder(i, j) && isDeadable(i, j, this.nbPlayers) && neighborType(i, j, -2) && probability(0.2)){//la case est voisine à une case morte du bord et est tuable
+							this.tableControl[i][j]=-2;
+							nbDeadTiles++;
+						}
+
+					}
+				}
+			}
+			System.out.println(nbTest);
+			System.out.println(nbWhile);
+			
 		}
 	}
 	
@@ -104,6 +203,9 @@ public class Board {
 			for(int j=0; j<this.length;j++){
 					if (this.tableControl[i][j]!=0){
 						this.table[i][j]=Character.toUpperCase(this.table[i][j]);
+					}
+					if (this.tableControl[i][j]==-1){
+						this.table[i][j]=' ';
 					}
 				}
 		}
@@ -159,8 +261,16 @@ public class Board {
 //——————————————————————————————————————————
 //——————————————————————————advanced mapping
 //——————————————————————————————————————————
+	public boolean isOnBorder(int i, int j) {
+		if(i==0 || j==0 ||  i==this.height-1 || j==this.length-1){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 	
-	public boolean neighborType(int i,int j,int type) {//does the tile have a neighbor of number type?
+	public boolean neighborType(int i,int j,int type) {//does the tile have a neighbor of number type? 
 		//int type=this.tableControl[i][j];
 		if (i>0)				{	if (this.tableControl[i-1][j]==type)	{return true;} }
 		if (i<this.height-1)	{	if (this.tableControl[i+1][j]==type)	{return true;} }
@@ -171,7 +281,7 @@ public class Board {
 		}
 		return false;
 	}
-	public int neighborTypeAmount(int i,int j,int type) {//does the tile have a neighbor of number type?
+	public int neighborTypeAmount(int i,int j,int type) {//how many neighbors
 		int amount=0;
 		//int type=this.tableControl[i][j];
 		if (i>0)				{	if (this.tableControl[i-1][j]==type)	{amount++;} }
@@ -184,7 +294,7 @@ public class Board {
 		return amount;
 	}
 	
-	public int[] neighborTypePlace(int i,int j,int type) {//does the tile have a neighbor of number type?
+	public int[] neighborTypePlace(int i,int j,int type) {//neighbor position in an array
 		//int type=this.tableControl[i][j];
 		int[] nbNeighbor=new int[4] ;
 		if (i>0)				{	if (this.tableControl[i-1][j]==type)	{nbNeighbor[0]=1;} }
@@ -197,7 +307,7 @@ public class Board {
 		return nbNeighbor;
 	}
 	
-	public boolean isHeadIslet(int i,int j,int type) {
+	public boolean isHeadIslet(int i,int j,int type) {  //the detection cannot start anywhere in the isle
 		if (neighborTypeAmount(i, j, type)==0){
 			return true;
 		}
@@ -224,7 +334,7 @@ public class Board {
 		int type = 0;
 		//System.out.println(i +" " + j);
 		boolean beginning = true;
-		if(this.isHeadIslet(i, j, type)){
+		if(this.isHeadIslet(i, j, type)){  //2 different previous position depending on the position of the neighbors
 			int neighborArray[]=neighborTypePlace(i, j, type);
 			if (neighborArray[2]==1 && neighborArray[3]==1){
 			System.out.println("est une tête");	
@@ -369,10 +479,19 @@ public class Board {
 	public void afficheTableControl(){//Board
 		for (int i=0; i<this.height;i++){
 			for(int j=0; j<this.length;j++){
-				System.out.print(this.tableControl[i][j]+ " ");
+				if(this.tableControl[i][j]<0){
+					System.out.print("  ");
+				}
+				else System.out.print(this.tableControl[i][j]+ " ");
 			}
 		System.out.println();
-			
+		}
+		System.out.println();
+		for (int i=0; i<this.height;i++){
+			for(int j=0; j<this.length;j++){
+				 System.out.print(this.tableControl[i][j]+ " ");
+			}
+		System.out.println();
 		}
 	}	
 	

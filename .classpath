@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="src/" kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="src/stdlib-package.jar"/>
+	<classpathentry kind="lib" path="src/stdlib.jar"/>
+	<classpathentry kind="lib" path="stdlib-package.jar"/>
+	<classpathentry kind="lib" path="stdlib.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
