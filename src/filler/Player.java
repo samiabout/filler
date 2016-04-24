@@ -7,35 +7,50 @@ import org.w3c.dom.css.ElementCSSInlineStyle;
 
 public class Player {
 	
-	private int nbPlayers;
+	protected int nbPlayers;
+
+	protected Interface intrefaceG;
+	boolean graphicChoices=true;
 
 
+	protected int player;
+	protected int opponent1;
+	protected int opponent2;
+	protected int opponent3;
 
-	private int player;
-	private int opponent1;
-	private int opponent2;
-	private int opponent3;
+	protected char playerColor;
+	protected char opponnentColor1;
+	protected char opponnentColor2;
+	protected char opponnentColor3;
 
-	private char playerColor;
-	private char opponnentColor1;
-	private char opponnentColor2;
-	private char opponnentColor3;
-
-	private char choix;
+	protected char choix;
 
 // ——————————————————————————————————————————
 // ——————————————————————————————constructors
 // ——————————————————————————————————————————
 
-	public Player(int player, int nbPlayers) {
+	public Player(int player, int nbPlayers, Interface interfaceG) {
+		if(player<=nbPlayers){//test non testé, peut être inutile
+		this.intrefaceG=interfaceG;
 		this.player = player;
 		this.nbPlayers = nbPlayers;
 		this.opponent1=(player+1)%(nbPlayers+1);
 		if (nbPlayers!=2){this.opponent2=(player+2)%(nbPlayers+1);}
 		else {this.opponent2=5;}
 		if (nbPlayers==4){this.opponent3=(player+3)%(nbPlayers+1);}
-		else {this.opponent3=5;}
+		else {this.opponent3=5;}			
+		}
 	}
+	
+	public Player (Player clonedPlayer) {
+		this.intrefaceG=clonedPlayer.intrefaceG;
+		this.player = clonedPlayer.player;
+		this.nbPlayers = clonedPlayer.nbPlayers;
+		this.opponent1=clonedPlayer.opponent1;
+		this.opponent2=clonedPlayer.opponent2;
+		this.opponent3=clonedPlayer.opponent3;
+	}
+	
 	
 //——————————————————————————————————————————
 //—————————————————————————getters & setters
@@ -101,21 +116,48 @@ public class Player {
 	// ——————————————————————————————————————————
 	// ——————————————————————————————turn setting
 	// ——————————————————————————————————————————
+	public boolean[] possibleChoices() {//table des choix possible, corélé au tableau couleurs
+			char choix;
+			boolean[] possibleChoices=new boolean[6];
+			for (int i = 0; i < possibleChoices.length; i++) {
+				choix=Board.couleurs.charAt(i);
+				if (Board.couleurs.indexOf(choix) < 0 || 
+						choix == this.playerColor ||
+						choix == this.opponnentColor1 || 
+						(choix == this.opponnentColor2 && this.nbPlayers != 2) || 
+						(choix == this.opponnentColor3 && this.nbPlayers == 4)) {
+						possibleChoices[i]=false;
+					} 
+					else {
+						possibleChoices[i]=true;
+			}
+		}
+			return possibleChoices;
+	}
+	
 	
 	public char demandeCouleur() {
-		char choix;
-		System.out.println("joueur" + this.player);
-		Scanner sc = new Scanner(System.in);
-		choix = sc.next().charAt(0);
-		if (Board.couleurs.indexOf(choix) < 0 || 
-			choix == this.playerColor ||
-			choix == this.opponnentColor1 || 
-			(choix == this.opponnentColor2 && this.nbPlayers != 2) || 
-			(choix == this.opponnentColor3 && this.nbPlayers == 4)) {
-			return demandeCouleur();
-		} // index du caractère choisi dans la liste couleurs(auiepo)
-		else {
-			return choix;
+		
+		System.out.println("joueur" + this.player);		
+		
+		this.intrefaceG.displayCommands(possibleChoices());
+		if(graphicChoices){
+			return this.intrefaceG.choseColor(possibleChoices());
+		}
+		else{
+			char choix;
+			
+			Scanner sc = new Scanner(System.in);
+			choix = sc.next().charAt(0);
+			
+			if (Board.couleurs.indexOf(choix) < 0 || 
+				choix == this.playerColor ||
+				choix == this.opponnentColor1 || 
+				(choix == this.opponnentColor2 && this.nbPlayers != 2) || 
+				(choix == this.opponnentColor3 && this.nbPlayers == 4)) {
+				return demandeCouleur();
+			} // index du caractère choisi dans la liste couleurs(auiepo)
+			else return choix;
 		}
 	}
 
@@ -142,10 +184,12 @@ public class Player {
 				if (tableControl[i][j] == 4) {nbCase4++;}
 			}
 		}
+		if(!Main.onlyResultDisplay){
 		System.out.println("le joueur 1 controle " + nbCase1 + "/" + height * length + " cases soit "
-				+ nbCase1 * 100 / (height * length) + "% du plateau.");
+				+ (float)nbCase1 * 100 / (height * length) + "% du plateau.");
 		System.out.println("le joueur 2 controle " + nbCase2 + "/" + height * length + " cases soit "
-				+ nbCase2 * 100 / (height * length) + "% du plateau.");
+				+ (float)nbCase2 * 100 / (height * length) + "% du plateau.");
+		}
 		if (this.nbPlayers != 2) {
 			System.out.println("le joueur 3 controle " + nbCase3 + "/" + height * length + " cases soit "
 					+ nbCase3 * 100 / (height * length) + "% du plateau.");
@@ -172,14 +216,19 @@ public class Player {
 				if (nbCase3 == max) {gagnant3 = true;nbGagnant++;}
 				if (nbCase4 == max) {gagnant4 = true;nbGagnant++;}
 				if (nbGagnant == 1) {
-					System.out.println("le gagnant est le joueur ");
-					if (gagnant1) {System.out.print("1");}
-					if (gagnant2) {System.out.print("2");}
-					if (gagnant3) {System.out.print("3");}
-					if (gagnant4) {System.out.print("4");}
+					
+					if(!Main.onlyResultDisplay){System.out.print("le gagnant est le joueur ");}
+					if (gagnant1) {System.out.print("1 ");}
+					if (gagnant2) {System.out.print("2 ");}
+					if (gagnant3) {System.out.print("3 ");}
+					if (gagnant4) {System.out.print("4 ");}
+					
+					
+					if(Main.onlyResultDisplay){	System.out.println((float)nbCase1 * 100 / (height * length)+" && "+(float)nbCase2 * 100 / (height * length));}
+				
 				}
 				if (nbGagnant > 1) {
-					System.out.println("égalité entre les joueurs ");
+					System.out.print("égalité entre les joueurs ");
 					if (gagnant1) {System.out.println("1 ");}
 					if (gagnant2) {System.out.println("2 ");}
 					if (gagnant3) {System.out.println("3 ");}

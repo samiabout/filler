@@ -7,13 +7,16 @@ import org.w3c.dom.css.ElementCSSInlineStyle;
 
 import com.sun.glass.ui.CommonDialogs.Type;
 import com.sun.jndi.url.iiopname.iiopnameURLContextFactory;
+import com.sun.org.apache.xalan.internal.utils.FeatureManager.Feature;
 
 import jdk.internal.org.objectweb.asm.tree.IntInsnNode;
 
 
 public class Board {
 
+
 	int nbPlayers;//default value
+	boolean islet;
 	
 	static int caca=6;
 	
@@ -25,21 +28,22 @@ public class Board {
 	
 	//avancé
 	boolean hexagonal;
-	boolean obstacles=false;
+	boolean obstacles;
 	double obstaclesAmount=0;
 	
-	final static String couleurs=new String("auiepo");
+	final static String couleurs=new String("roygbm");// auiepo
 	
 //——————————————————————————————————————————
 //——————————————————————————————constructors
 //——————————————————————————————————————————	
 	
-	public Board(int height, int length, int nbPlayers, boolean hexagonal, boolean obstacles , double obstaclesAmount) {
+	public Board(int height, int length, int nbPlayers, boolean hexagonal, boolean obstacles , double obstaclesAmount, boolean islet) {
 		this.height=height;
 		this.length=length;
 		this.nbPlayers=nbPlayers;
 		
 		this.hexagonal=hexagonal;
+		this.islet=islet;
 		this.obstacles=obstacles;
 		this.obstaclesAmount=obstaclesAmount;
 		
@@ -48,12 +52,36 @@ public class Board {
 		this.setObstacles();
 
 		this.toMaj();	
+		
+		if(!Main.onlyResultDisplay){
 		this.afficheTable();
 			System.out.println();
-		this.afficheTableControl();
+		this.afficheTableControl();			
+		}
+
 	}
 	
-	public Board(){ }
+	public Board() {
+		
+	}
+	
+	public Board(Board clonedBoard){  
+		this.height=clonedBoard.height;
+		this.length=clonedBoard.length;
+		this.nbPlayers=clonedBoard.nbPlayers;
+		
+		this.hexagonal=clonedBoard.hexagonal;
+		this.islet=clonedBoard.islet;
+		this.obstacles=clonedBoard.obstacles;
+		this.obstaclesAmount=clonedBoard.obstaclesAmount;
+		
+		for (int i = 0; i < this.height; i++) {
+			for (int j = 0; j < this.length; j++) {
+				this.table[i][j]=clonedBoard.table[i][j];
+				this.tableControl[i][j]=clonedBoard.tableControl[i][j];
+			}
+		}
+	}
 //——————————————————————————————————————————
 //—————————————————————————getters & setters
 //——————————————————————————————————————————	
@@ -61,8 +89,20 @@ public class Board {
 		return this.table;
 	}
 	
+	public char table(int i,int j) {
+		return this.table[i][j];	
+	}
+	
+	public char getTableElement(int i, int j) {
+		return this.table[i][j];
+	}
+	
 	public int[][] tableControl(){
 		return this.tableControl;
+	}
+	
+	public int	tableControl(int i,int j) {
+		return this.tableControl[i][j];
 	}
 	
 	public int height(){
@@ -114,9 +154,7 @@ public class Board {
 				)
 				
 						{return creeTable(nbPlayers);}//test que les deux joueurs n'ont pas la même couleur de départ
-		
 		else{
-
 			return table;
 			}
 		}
@@ -163,11 +201,11 @@ public class Board {
 				for (int i = 0; i < this.height; i++) {
 					for (int j = 0; j < this.length; j++) {
 						nbTest++;
-						if(isDeadable(i, j, this.nbPlayers) && probability(0.006) ){//toute les cases tuables du plateau
+						if(isDeadable(i, j, this.nbPlayers) && probability(0.005) ){//toute les cases tuables du plateau
 							this.tableControl[i][j]=-1;
 							nbDeadTiles++;
 						}
-						if(isOnBorder(i, j)&& isDeadable(i, j, this.nbPlayers) && probability(0.05)){//la case est sur le bord est tuable
+						if(isOnBorder(i, j)&& isDeadable(i, j, this.nbPlayers) && probability(0.07)){//la case est sur le bord est tuable (anciennement 0.05)
 							this.tableControl[i][j]=-2;
 							nbDeadTiles++;
 						}
@@ -211,6 +249,20 @@ public class Board {
 		}
 	}
 
+	public void setCouleur(char choix,Player player, Interface interfaceG){//transforme le tableau avec les modifications couleurs
+    	int noPlayer = player.player();
+		for (int i=0; i<this.height;i++){
+			for(int j=0; j<this.length;j++){
+					if (this.tableControl[i][j]==noPlayer){
+						this.table[i][j]=choix;
+						if(Main.graphicDisplay){
+						interfaceG.changeColor(i, j, choix);	
+						}
+					}
+				}
+		}				
+	}
+	
 	public void setCouleur(char choix,Player player){//transforme le tableau avec les modifications couleurs
     	int noPlayer = player.player();
 		for (int i=0; i<this.height;i++){
@@ -222,7 +274,9 @@ public class Board {
 		}				
 	}
 	
-	public void setControl(char choix, Player player){//Board//transforme le tableauControl avec les modifications nouveau control
+	
+	public int setControl(char choix, Player player){//Board//transforme le tableauControl avec les modifications nouveau control
+		int nbModifs=0;
 		int noPlayer = player.player();
     	boolean finModif=false;
     	while (!finModif){
@@ -230,23 +284,24 @@ public class Board {
         	for (int i=0; i<this.height;i++){			//on balaie toutes les cases
     			for(int j=0; j<this.length;j++){		
     				if (this.tableControl[i][j]==noPlayer){	//la case doit appartenir au joueur
-    					if (i>0)				{	if (this.table[i-1][j]==choix && this.tableControl[i-1][j]==0)	{this.tableControl[i-1][j]=noPlayer;finModif=false;} }
-    					if (i<this.height-1)	{	if (this.table[i+1][j]==choix && this.tableControl[i+1][j]==0)	{this.tableControl[i+1][j]=noPlayer;finModif=false;} }
-    					if (j>0)				{	if (this.table[i][j-1]==choix && this.tableControl[i][j-1]==0)	{this.tableControl[i][j-1]=noPlayer;finModif=false;} }
-    					if (j<this.length-1)	{	if (this.table[i][j+1]==choix && this.tableControl[i][j+1]==0)	{this.tableControl[i][j+1]=noPlayer;finModif=false;} }
+    					if (i>0)				{	if (this.table[i-1][j]==choix && this.tableControl[i-1][j]==0)	{this.tableControl[i-1][j]=noPlayer;nbModifs++;finModif=false;} }
+    					if (i<this.height-1)	{	if (this.table[i+1][j]==choix && this.tableControl[i+1][j]==0)	{this.tableControl[i+1][j]=noPlayer;nbModifs++;finModif=false;} }
+    					if (j>0)				{	if (this.table[i][j-1]==choix && this.tableControl[i][j-1]==0)	{this.tableControl[i][j-1]=noPlayer;nbModifs++;finModif=false;} }
+    					if (j<this.length-1)	{	if (this.table[i][j+1]==choix && this.tableControl[i][j+1]==0)	{this.tableControl[i][j+1]=noPlayer;nbModifs++;finModif=false;} }
     				}//add conditions for hexagonal = true;
     			}
     		}
     	}
-    	boolean islet=true;
-    	while (islet){
-    		islet=false;
+    	//boolean islet=true;
+    	while (this.islet){
+    		this.islet=false;
 	    	for (int i = 0; i < this.height; i++) {
 	    		for (int j = 0; j < this.length; j++) {
 	    			if (this.tableControl[i][j]==0){
 						if (islet(i, j, player)){System.out.println("a");
 							this.tableControl[i][j]=caca;caca++;//player.player();
-							islet=true;
+							nbModifs++;//position à vérifier
+							this.islet=true;
 						}
 	    			}
 	    			
@@ -255,9 +310,52 @@ public class Board {
 				
 			}	
     	}
-
+    	
+		return nbModifs;
 	}
 
+	//——————————————————————————————————————————
+	//————————————————————————————Boards display
+	//——————————————————————————————————————————
+		
+		public void afficheTable(){//Board
+			for (int i=0; i<this.height;i++){
+				for(int j=0; j<this.length;j++){
+					System.out.print(this.table[i][j]+ " ");
+				}
+			System.out.println();
+				
+			}
+		}
+		
+		public void afficheTableControl(){//Board
+			for (int i=0; i<this.height;i++){
+				for(int j=0; j<this.length;j++){
+					if(this.tableControl[i][j]<0){
+						System.out.print("  ");
+					}
+					else System.out.print(this.tableControl[i][j]+ " ");
+				}
+			System.out.println();
+			}
+			if (this.islet){
+			System.out.println();
+			for (int i=0; i<this.height;i++){
+				for(int j=0; j<this.length;j++){
+					 System.out.print(this.tableControl[i][j]+ " ");
+				}
+			System.out.println();
+			}			
+			}
+
+		}	
+		
+	//——————————————————————————————————————————
+	//———————————————————————————————————The End
+	//——————————————————————————————————————————	
+	
+	
+	
 //——————————————————————————————————————————
 //——————————————————————————advanced mapping
 //——————————————————————————————————————————
@@ -462,42 +560,7 @@ public class Board {
 		return false;
 	}
 	
-//——————————————————————————————————————————
-//————————————————————————————Boards display
-//——————————————————————————————————————————
-	
-	public void afficheTable(){//Board
-		for (int i=0; i<this.height;i++){
-			for(int j=0; j<this.length;j++){
-				System.out.print(this.table[i][j]+ " ");
-			}
-		System.out.println();
-			
-		}
-	}
-	
-	public void afficheTableControl(){//Board
-		for (int i=0; i<this.height;i++){
-			for(int j=0; j<this.length;j++){
-				if(this.tableControl[i][j]<0){
-					System.out.print("  ");
-				}
-				else System.out.print(this.tableControl[i][j]+ " ");
-			}
-		System.out.println();
-		}
-		System.out.println();
-		for (int i=0; i<this.height;i++){
-			for(int j=0; j<this.length;j++){
-				 System.out.print(this.tableControl[i][j]+ " ");
-			}
-		System.out.println();
-		}
-	}	
-	
-//——————————————————————————————————————————
-//———————————————————————————————————The End
-//——————————————————————————————————————————	
+
 	
 
 }
