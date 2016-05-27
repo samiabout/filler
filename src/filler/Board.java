@@ -8,20 +8,21 @@ import org.w3c.dom.css.ElementCSSInlineStyle;
 import com.sun.glass.ui.CommonDialogs.Type;
 import com.sun.jndi.url.iiopname.iiopnameURLContextFactory;
 import com.sun.org.apache.xalan.internal.utils.FeatureManager.Feature;
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.BooleanType;
 
 import jdk.internal.org.objectweb.asm.tree.IntInsnNode;
 
 
 public class Board {
 
-
+private boolean printDebug;
 	int nbPlayers;//default value
 	boolean islet;
 	
 	static int caca=6;
 	
-	private int tableControl[][]=new int[100][100];
-	private char table[][]=new char[100][100];
+	private int tableControl[][]=new int[50][50];
+	private char table[][]=new char[50][50];
 	
 	private int height;//default value
 	private int length;//default value
@@ -38,6 +39,7 @@ public class Board {
 //——————————————————————————————————————————	
 	
 	public Board(int height, int length, int nbPlayers, boolean hexagonal, boolean obstacles , double obstaclesAmount, boolean islet) {
+		this.printDebug=false;
 		this.height=height;
 		this.length=length;
 		this.nbPlayers=nbPlayers;
@@ -119,6 +121,10 @@ public class Board {
 	
 	public void length(int length){
 		this.length=length;
+	}
+	
+	public void setIslet(boolean islett) {
+		this.islet=islett;
 	}
 
 //——————————————————————————————————————————
@@ -293,13 +299,16 @@ public class Board {
     		}
     	}
     	//boolean islet=true;
+    	boolean recordislet=this.islet;
+    	if(this.printDebug){System.out.println(islet);}
     	while (this.islet){
     		this.islet=false;
 	    	for (int i = 0; i < this.height; i++) {
 	    		for (int j = 0; j < this.length; j++) {
 	    			if (this.tableControl[i][j]==0){
-						if (islet(i, j, player)){System.out.println("a");
-							this.tableControl[i][j]=caca;caca++;//player.player();
+						if (islet(i, j, player)){if(this.printDebug){System.out.println("a");}
+							this.tableControl[i][j]=noPlayer;
+							//this.tableControl[i][j]=caca;caca++;//player.player();
 							nbModifs++;//position à vérifier
 							this.islet=true;
 						}
@@ -310,6 +319,7 @@ public class Board {
 				
 			}	
     	}
+    	this.islet=recordislet;
     	
 		return nbModifs;
 	}
@@ -435,7 +445,7 @@ public class Board {
 		if(this.isHeadIslet(i, j, type)){  //2 different previous position depending on the position of the neighbors
 			int neighborArray[]=neighborTypePlace(i, j, type);
 			if (neighborArray[2]==1 && neighborArray[3]==1){
-			System.out.println("est une tête");	
+			if(this.printDebug){System.out.println("est une tête");	}
 			return  isletParameterized(	i, 			//ordonnée
 										j,			//abscisse
 										i,			//la lecture a une direction, elle se fait en foncton de la position de la case précédent
@@ -446,7 +456,7 @@ public class Board {
 										type, 		//numéro des cases de l'ile (ici 0)
 										beginning); //savoir on a bouclé =>commence à true puis est à false dès le deuxième test
 			}else {
-			System.out.println("est une tête");	
+			if(this.printDebug){System.out.println("est une tête");}
 			return  isletParameterized(	i, 			//ordonnée
 										j,			//abscisse
 										i+1,			//la lecture a une direction, elle se fait en foncton de la position de la case précédent
@@ -458,7 +468,7 @@ public class Board {
 										beginning); //savoir on a bouclé =>commence à true puis est à false dès le deuxième test
 			}
 		}
-		else{System.out.println("n'est pas une tête");return false;}
+		else{if(this.printDebug){System.out.println("n'est pas une tête");}return false;}
 		//return false;
 	}
 	
@@ -475,7 +485,7 @@ public class Board {
 				!this.neighborType(i, j, player.opponent2()) &&
 				!this.neighborType(i, j, player.opponent3())	  ){
 			
-		System.out.println(i +" " + j);
+			if(this.printDebug){System.out.println(i +" " + j);}
 		if (neighborTypeAmount(i, j, type)==0){
 			return true;
 		}
@@ -488,7 +498,7 @@ public class Board {
 			
 			
 			//————————————————————————
-			  System.out.println("c");
+			if(this.printDebug){System.out.println("c");}
 			//————————————————————————
 			
 			
@@ -503,7 +513,9 @@ public class Board {
 			}
 			
 			for (int k = start; k < 4+start; k++) {//permet de commencer par la case départ
-				System.out.println(k +"k"+ k%4 + "start" + start);
+				if(this.printDebug){
+					System.out.println(k +"k"+ k%4 + "start" + start);
+				}
 				switch (k%4) {
 				
 				case 0:
@@ -545,7 +557,10 @@ public class Board {
 			//this.neighborType(i, j, player.player()) 
 				){
 			//————————————————————————
-			System.out.println("deeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");return true;
+			if(this.printDebug){
+			System.out.println("deeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");	
+			}
+			return true;
 			//————————————————————————
 		}
 

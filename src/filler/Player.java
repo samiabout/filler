@@ -49,6 +49,9 @@ public class Player {
 		this.opponent1=clonedPlayer.opponent1;
 		this.opponent2=clonedPlayer.opponent2;
 		this.opponent3=clonedPlayer.opponent3;
+		this.opponnentColor1=clonedPlayer.opponnentColor1;
+		this.opponnentColor2=clonedPlayer.opponnentColor2;
+		this.opponnentColor3=clonedPlayer.opponnentColor3;
 	}
 	
 	
@@ -135,6 +138,25 @@ public class Player {
 			return possibleChoices;
 	}
 	
+	public boolean[] possibleChoiceswithOpponentColor() {//table des choix possible, corélé au tableau couleurs
+		char choix;
+		boolean[] possibleChoices=new boolean[6];
+		for (int i = 0; i < possibleChoices.length; i++) {
+			choix=Board.couleurs.charAt(i);
+			if (Board.couleurs.indexOf(choix) < 0 || 
+					choix == this.playerColor ||
+					//(choix == this.opponnentColor1 ) || (ce doit tourjours être faux)
+					(choix == this.opponnentColor2 && this.nbPlayers != 2) || 
+					(choix == this.opponnentColor3 && this.nbPlayers == 4)) {
+					possibleChoices[i]=false;
+				} 
+				else {
+					possibleChoices[i]=true;
+		}
+	}
+		return possibleChoices;
+}
+	
 	
 	public char demandeCouleur() {
 		
@@ -218,8 +240,8 @@ public class Player {
 				if (nbGagnant == 1) {
 					
 					if(!Main.onlyResultDisplay){System.out.print("le gagnant est le joueur ");}
-					if (gagnant1) {System.out.print("1 ");}
-					if (gagnant2) {System.out.print("2 ");}
+					if (gagnant1) {System.out.print("1 ");Main.g1++;}
+					if (gagnant2) {System.out.print("2 ");Main.g2++;}
 					if (gagnant3) {System.out.print("3 ");}
 					if (gagnant4) {System.out.print("4 ");}
 					

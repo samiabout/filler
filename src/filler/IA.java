@@ -14,6 +14,8 @@ public class IA extends Player{
 
 
 
+	private boolean allmostTheEnd;
+
 	public IA(int player, int nbPlayers, Interface interfaceG) {
 		super(player, nbPlayers, interfaceG);
 		
@@ -30,16 +32,27 @@ public class IA extends Player{
 		super(clonedPlayerToIA);
 	}
 
-
+	
+//methods
 	
 	public char demandeCouleur(Board board,boolean complexity,Player opponnent) {
 		if(!Main.onlyResultDisplay){
 		System.out.println("joueur" + this.player);	
-		}	
+		}
+		
+		
 		this.intrefaceG.displayCommands(possibleChoices());
-		if (complexity){
-		IAForcast test=new IAForcast(board, this,opponnent,4);	
+		
+		
+		/*if (complexity){
+		IAForcast test=new IAForcast(board, this,opponnent,5);	
 		return test.getBestChoice();
+		}*/
+		
+		if (!allmostTheEnd && complexity){
+			IAForcast2 superIA=new IAForcast2(board, this, opponnent);
+			//System.out.println("——> "+Board.couleurs.charAt(superIA.getBestChoice()));
+			return Board.couleurs.charAt(superIA.getBestChoice());
 		}
 		
 		return iaChoseColor(possibleChoices(),board);
