@@ -1,5 +1,6 @@
 package filler;
 
+import java.io.Serializable;
 import java.text.spi.NumberFormatProvider;
 import java.util.Random;
 
@@ -13,7 +14,7 @@ import com.sun.org.apache.xalan.internal.xsltc.compiler.util.BooleanType;
 import jdk.internal.org.objectweb.asm.tree.IntInsnNode;
 
 
-public class Board {
+public class Board implements Serializable{
 
 private boolean printDebug;
 	int nbPlayers;//default value
@@ -32,13 +33,13 @@ private boolean printDebug;
 	boolean obstacles;
 	double obstaclesAmount=0;
 	
-	final static String couleurs=new String("roygbm");// auiepo
+	final static String couleurs=new String("rojvbi");// auiepo  roygbm //  /!\ do not use 's' nor 'w'
 	
 //——————————————————————————————————————————
 //——————————————————————————————constructors
 //——————————————————————————————————————————	
 	
-	public Board(int height, int length, int nbPlayers, boolean hexagonal, boolean obstacles , double obstaclesAmount, boolean islet) {
+	public Board(int height, int length, int nbPlayers, boolean hexagonal, boolean obstacles , double obstaclesAmount, boolean islet,MyConnector aConnector) {
 		this.printDebug=false;
 		this.height=height;
 		this.length=length;
@@ -50,7 +51,13 @@ private boolean printDebug;
 		this.obstaclesAmount=obstaclesAmount;
 		
 		this.creeTableControl(nbPlayers);
-		this.creeTable(nbPlayers);
+		if(Main.playConnected){
+			this.table=aConnector.importTable(height);
+		}
+		else{
+			this.creeTable(nbPlayers);
+		}
+		
 		this.setObstacles();
 
 		this.toMaj();	
@@ -58,7 +65,7 @@ private boolean printDebug;
 		if(!Main.onlyResultDisplay){
 		this.afficheTable();
 			System.out.println();
-		this.afficheTableControl();			
+		//this.afficheTableControl();			
 		}
 
 	}
@@ -125,6 +132,10 @@ private boolean printDebug;
 	
 	public void setIslet(boolean islett) {
 		this.islet=islett;
+	}
+	
+	public boolean getIslet(){
+		return this.islet;
 	}
 
 //——————————————————————————————————————————
@@ -256,7 +267,7 @@ private boolean printDebug;
 	}
 
 	public void setCouleur(char choix,Player player, Interface interfaceG){//transforme le tableau avec les modifications couleurs
-    	int noPlayer = player.player();
+		int noPlayer = player.player();
 		for (int i=0; i<this.height;i++){
 			for(int j=0; j<this.length;j++){
 					if (this.tableControl[i][j]==noPlayer){
@@ -287,14 +298,34 @@ private boolean printDebug;
     	boolean finModif=false;
     	while (!finModif){
     		finModif=true;
-        	for (int i=0; i<this.height;i++){			//on balaie toutes les cases
-    			for(int j=0; j<this.length;j++){		
+        	for (int i=this.height; i>=0;i--){			
+        		for(int j=this.length; j>=0;j--){		
     				if (this.tableControl[i][j]==noPlayer){	//la case doit appartenir au joueur
     					if (i>0)				{	if (this.table[i-1][j]==choix && this.tableControl[i-1][j]==0)	{this.tableControl[i-1][j]=noPlayer;nbModifs++;finModif=false;} }
     					if (i<this.height-1)	{	if (this.table[i+1][j]==choix && this.tableControl[i+1][j]==0)	{this.tableControl[i+1][j]=noPlayer;nbModifs++;finModif=false;} }
     					if (j>0)				{	if (this.table[i][j-1]==choix && this.tableControl[i][j-1]==0)	{this.tableControl[i][j-1]=noPlayer;nbModifs++;finModif=false;} }
     					if (j<this.length-1)	{	if (this.table[i][j+1]==choix && this.tableControl[i][j+1]==0)	{this.tableControl[i][j+1]=noPlayer;nbModifs++;finModif=false;} }
-    				}//add conditions for hexagonal = true;
+    					if (hexagonal){
+    						if(j%2==1) {
+    							if(j>0 && i>0){
+    								if (this.table[i-1][j-1]==choix && this.tableControl[i-1][j-1]==0)	{this.tableControl[i-1][j-1]=noPlayer;nbModifs++;finModif=false;} 
+    							}
+								if(j<this.length-1 && i>0){
+    								if (this.table[i-1][j+1]==choix && this.tableControl[i-1][j+1]==0)	{this.tableControl[i-1][j+1]=noPlayer;nbModifs++;finModif=false;} 
+    							}
+    						}
+    						if(j%2==0){
+       							if(j>0 && i<this.length-1){
+    								if (this.table[i+1][j-1]==choix && this.tableControl[i+1][j-1]==0)	{this.tableControl[i+1][j-1]=noPlayer;nbModifs++;finModif=false;} 
+       							}
+								if(j<this.length-1 && i<this.length-1){
+    								if (this.table[i+1][j+1]==choix && this.tableControl[i+1][j+1]==0)	{this.tableControl[i+1][j+1]=noPlayer;nbModifs++;finModif=false;}     							
+    							
+    							}
+    						}
+    					
+    				}
+    				}
     			}
     		}
     	}
@@ -303,8 +334,10 @@ private boolean printDebug;
     	if(this.printDebug){System.out.println(islet);}
     	while (this.islet){
     		this.islet=false;
-	    	for (int i = 0; i < this.height; i++) {
-	    		for (int j = 0; j < this.length; j++) {
+	    	//for (int i = 0; i < this.height; i++) {
+	    		//for (int j = 0; j < this.length; j++) {
+        	for (int i=this.height; i>=0;i--){			
+        		for(int j=this.length; j>=0;j--){
 	    			if (this.tableControl[i][j]==0){
 						if (islet(i, j, player)){if(this.printDebug){System.out.println("a");}
 							this.tableControl[i][j]=noPlayer;
@@ -323,6 +356,13 @@ private boolean printDebug;
     	
 		return nbModifs;
 	}
+	
+	public void changeColor(int i, int j , char choix){
+		this.table[i][j]=choix;
+	}
+	public void changeTableControl(int i,int j,int nb){
+		this.tableControl[i][j]=nb;
+	}
 
 	//——————————————————————————————————————————
 	//————————————————————————————Boards display
@@ -331,7 +371,7 @@ private boolean printDebug;
 		public void afficheTable(){//Board
 			for (int i=0; i<this.height;i++){
 				for(int j=0; j<this.length;j++){
-					System.out.print(this.table[i][j]+ " ");
+					System.out.print(this.table[i][j]+" ");
 				}
 			System.out.println();
 				

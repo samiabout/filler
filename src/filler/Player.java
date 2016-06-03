@@ -1,11 +1,12 @@
 package filler;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
 import org.omg.CORBA.PRIVATE_MEMBER;
 import org.w3c.dom.css.ElementCSSInlineStyle;
 
-public class Player {
+public class Player implements Serializable{
 	
 	protected int nbPlayers;
 
@@ -30,7 +31,7 @@ public class Player {
 // ——————————————————————————————————————————
 
 	public Player(int player, int nbPlayers, Interface interfaceG) {
-		if(player<=nbPlayers){//test non testé, peut être inutile
+		if(player<=nbPlayers){
 		this.intrefaceG=interfaceG;
 		this.player = player;
 		this.nbPlayers = nbPlayers;
@@ -181,6 +182,11 @@ public class Player {
 			} // index du caractère choisi dans la liste couleurs(auiepo)
 			else return choix;
 		}
+	}
+	
+	public void montreDemandeCouleur(){
+		System.out.println("joueur" + this.player);	
+		this.intrefaceG.displayCommands(possibleChoices());
 	}
 
 	// ——————————————————————————————————————————

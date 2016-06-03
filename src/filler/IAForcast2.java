@@ -1,3 +1,17 @@
+/*
+prendre ne compte les cas d'égalité
+
+reverse board pour joueur 1
+
+check décrémentation de la profondeur de calcul
+
+changer les valeur 30 45 pour les grandes grilles
+
+aller à profondeur max 6 tours pour les petites grilles
+
+prendre en compte la foncton pisshimoff
+
+*/
 package filler;
 
 import java.awt.font.TextHitInfo;
@@ -29,9 +43,12 @@ public class IAForcast2 {
 	private IA ia;
 	private int nbTile;
 	
+	private int nbEtapes;
+	
 
 //constructor	
 	public IAForcast2(Board board, IA ia,Player opponnentToClone) {
+		this.nbEtapes=0;
 		this.nbTile = board.height()*board.length();
 		this.ia=ia;
 		this.myBiggestDifference=0;
@@ -66,7 +83,18 @@ public int getBestChoice() {
 	}
 	
 	public int myForcast(Board board){//ne prend en compte que mes coups //Player opponnent
+		long timeIslet=0;
+		long timeforcast=System.currentTimeMillis();
 		boolean[] possibleChoices=new boolean[6];
+		int profondeurDeTest=0;
+		if(this.nbControledtiles<30){
+			profondeurDeTest=profondeurB;
+		}
+		else{
+			profondeurDeTest=profondeurA;
+		}
+		System.out.println(profondeurDeTest);
+		//System.out.println(profondeurDeTest);
 				for (int a = 0; a < 6; a++) {
 					for (int u = 0; u < 6; u++) {
 						for (int i = 0; i < 6; i++) {
@@ -78,40 +106,53 @@ public int getBestChoice() {
 						
 						
 						possibleChoices=this.ia.possibleChoices();//this.allmyIAPossibilities[a][u][i][e][p][o]
-						if(possibleChoices[a]){						
+						if(possibleChoices[a]){
 								//fill
-							if(profondeurB==1){
+							if(profondeurDeTest==1){
+								this.nbEtapes++;
 								this.allmyBPossibilities[a][u][i][e][p].setIslet(true);
 							}
+							//System.out.println("1  "+this.allmyBPossibilities[a][u][i][e][p].getIslet());
 							fill(a,u,i,e,p,a);
-							if(profondeurB>1){
-								if(profondeurB==2){
+							if(profondeurDeTest>1){
+								if(profondeurDeTest==2){
+									this.nbEtapes++;
 									this.allmyBPossibilities[a][u][i][e][p].setIslet(true);
 								}
+								//System.out.println("2  "+this.allmyBPossibilities[a][u][i][e][p].getIslet());
 								fill(a,u,i,e,p,u);
 							}
-							if (profondeurB>2){
-								if(profondeurB==3){
+							if (profondeurDeTest>2){
+								if(profondeurDeTest==3){
 									this.allmyBPossibilities[a][u][i][e][p].setIslet(true);
 								}
+								//System.out.println("3  "+this.allmyBPossibilities[a][u][i][e][p].getIslet());
 								fill(a,u,i,e,p,i);
 							}
-							if (profondeurB>3){
-								if(profondeurB==4){
+							if (profondeurDeTest>3){
+								if(profondeurDeTest==4){
 									this.allmyBPossibilities[a][u][i][e][p].setIslet(true);
 								}
+								//System.out.println("4  "+this.allmyBPossibilities[a][u][i][e][p].getIslet());
 								fill(a,u,i,e,p,e);
 							}
-							if (profondeurB>4){
+							if (profondeurDeTest>4){
+								timeIslet=System.currentTimeMillis()-timeIslet;
 								this.allmyBPossibilities[a][u][i][e][p].setIslet(true);
+								//System.out.println("5  "+this.allmyBPossibilities[a][u][i][e][p].getIslet());
 								fill(a,u,i,e,p,p);
 								this.allmyBPossibilities[a][u][i][e][p].setIslet(true);
+								timeIslet=System.currentTimeMillis()-timeIslet;
 							}
 							
 
 							}
 					}}}}}}
-				
+				//System.out.println(this.nbEtapes);
+				if(!Main.onlyResultDisplay){
+					System.out.println("temps forcast calcul : "+(System.currentTimeMillis()-timeforcast));
+					System.out.println("ici        ii          temps islet : "+ timeIslet);
+				}
 				
 				if(this.nbControledtiles<30){
 					if(!Main.onlyResultDisplay)	{
@@ -121,30 +162,34 @@ public int getBestChoice() {
 					
 					//TODO décrémenter this.profondeurB
 				}
-				if(this.nbControledtiles<45 && this.nbControledtiles>30){
+				if(this.nbControledtiles<=45 && this.nbControledtiles>=30){
 					if(!Main.onlyResultDisplay)	{
 						System.out.println("doit choisir amount");
 					}
 					bestChoice=this.bestAmountChoice();//en fct du gain brut
 				}
 				
-
+					//System.out.println(this.nbEtapes);
 				return bestChoice;
 				//return maybeIWillUseHisBestChoiceToPissHimOff(board, iaToClone, opponnent, bestchoice);
 	}
 	
 	private int bestBorderChoice() {
+		long timebegin=System.currentTimeMillis();
 		int bestChoiceBorder=0;
 		int bestChoiceAmount=0;
 		int bestBorderChoiceModifs=0;
 		int bestAmountChoiceModifs=0;
 		boolean profondeurBDecremente=false;
+		boolean[] possibleChoices=new boolean[6];
 		for (int a = 0; a < 6; a++) {
 			for (int u = 0; u < 6; u++) {
 				for (int i = 0; i < 6; i++) {
 					for (int e = 0; e < 6; e++) {
 						for (int p = 0; p < 6; p++) {
-							for (int o = 0; o < 6; o++) {
+							this.nbEtapes++;
+								possibleChoices=this.ia.possibleChoices();
+								if(possibleChoices[a]){
 								this.borderSize[a][u][i][e][p]=0;
 								this.borderSize[a][u][i][e][p]=borderSize(this.allmyBPossibilities[a][u][i][e][p],this.ia );//this.allmyIAPossibilities[a][u][i][e][p]
 								if (this.borderSize[a][u][i][e][p]>this.biggestBorderSize){
@@ -166,10 +211,10 @@ public int getBestChoice() {
 								bestChoiceAmount=a;
 								bestAmountChoiceModifs=this.myModifications[a][u][i][e][p];
 								}
+								}
 								
-								
-							}}}}}}
-		if (bestAmountChoiceModifs>2*bestBorderChoiceModifs){
+							}}}}}
+		if (bestAmountChoiceModifs>3*bestBorderChoiceModifs){
 			if(!Main.onlyResultDisplay)	{
 				System.out.println("choix amount");
 			}
@@ -178,17 +223,23 @@ public int getBestChoice() {
 		if(!Main.onlyResultDisplay)	{
 			System.out.println("choix border");
 		}
+		if(!Main.onlyResultDisplay){
+			System.out.println("temps border calcul : "+(System.currentTimeMillis()-timebegin));
+		}
 		return bestChoiceBorder;
 	}
 	private int bestAmountChoice() {
 		boolean profondeurADecremente=false;
+		boolean[] possibleChoices=new boolean[6];
 		int bestChoice=0;
 		for (int a = 0; a < 6; a++) {
 			for (int u = 0; u < 6; u++) {
 				for (int i = 0; i < 6; i++) {
 					for (int e = 0; e < 6; e++) {
 						for (int p = 0; p < 6; p++) {
-							for (int o = 0; o < 6; o++) {
+							this.nbEtapes++;
+								possibleChoices=this.ia.possibleChoices();
+								if(possibleChoices[a]){
 								if(this.myModifications[a][u][i][e][p]>this.myBiggestDifference){ //calcule le plus grand nombre de changements
 								this.myBiggestDifference=this.myModifications[a][u][i][e][p];
 								bestChoice=a;
@@ -197,14 +248,13 @@ public int getBestChoice() {
 									profondeurA--;
 									profondeurADecremente=true;
 									if(!Main.onlyResultDisplay)	{
-										if(!Main.onlyResultDisplay)	{
-											System.out.println(profondeurA);
-										}
+										System.out.println(profondeurA);
 									}
 								}
 								
 								}
-							}}}}}}
+								}
+							}}}}}
 		return bestChoice;
 		
 	}
@@ -213,11 +263,11 @@ public int getBestChoice() {
 	
 	
 	private int borderSize(Board board,Player player) {
-		int[][]border=new int[this.nbTile][2];
-		for (int i = 0; i <this.nbTile; i++) {
+		//int[][]border=new int[this.nbTile][2];
+		/*for (int i = 0; i <this.nbTile; i++) {
 			border[i][0]=-1;
 			border[i][1]=-1;
-		}
+		}*/
 		int size=0;
 		for (int i = 0; i < board.length(); i++) {
 			for (int u = 0; u < board.height(); u++) {
@@ -225,8 +275,8 @@ public int getBestChoice() {
 						//isNewCoordonnee(i,u,border) && 
 						board.neighborType(i, u,0)	
 						){
-					border[size][0]=i;
-					border[size][1]=u;
+					//border[size][0]=i;
+					//border[size][1]=u;
 					size++;
 				}
 			}}
