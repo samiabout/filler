@@ -33,7 +33,7 @@ public class Main {
 	static boolean consoleDisplay=false;
 	static boolean onlyResultDisplay=false;
 	
-	static boolean autoset =false;
+	static boolean autoset =true;
 	
 	static boolean playConnected=false;
 	
@@ -205,13 +205,17 @@ public class Main {
 			game1.board.afficheTableControl();	
 	        do{
 	        	long startTime = System.currentTimeMillis();
-	        	boolean weSave=GamePlay.playgame(noTour%game1.nbPlayers,game1);//game1.ialevel,game1.playerConnected,game1.aConnection
-	        	if(weSave){
-	        		System.out.println("give a name to your save");
-	        		String saveName=sc.next();
-	        		Save save=new Save(saveName,game1.board, game1.tabJeu,noTour,System.currentTimeMillis()-game1.allGameTime);
-	        	}
-	        	
+	        	boolean weSave=false;
+	        	do{
+		        	weSave=GamePlay.playgame(noTour%game1.nbPlayers,game1);//game1.ialevel,game1.playerConnected,game1.aConnection
+		        	if(weSave){
+		        		System.out.println("give a name to your save (or write \"abort\")");
+		        		String saveName=sc.next();
+		        		if(saveName!="abort") {
+		        			Save save=new Save(saveName,game1.board, game1.tabJeu,noTour,System.currentTimeMillis()-game1.allGameTime);
+		        		}
+		        	}
+	        	}while(weSave);
 	        	
 	        	
 	        	noTour++;

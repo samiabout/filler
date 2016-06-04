@@ -123,6 +123,12 @@ public class Interface implements Serializable{
 					if ( mx-hsx<x && x<mx+hsx && my-hsy<y && y<my+hsy){
 						
 						selectedColor=i;
+				        try {
+							Thread.sleep(20);
+						} catch (InterruptedException e) {
+							System.out.println("interuption");
+							//e.printStackTrace();
+						}
 						setColorToSelect(selectedColor);
 					}
 				}
@@ -151,22 +157,25 @@ public class Interface implements Serializable{
 								}							
 							}
 						}
-				if(this.squareSizeJ-this.squareSizeJ<x && this.squareSizeJ+this.squareSizeJ>0 && 1.11-(double)(0.5*this.squareSizeI)-(double)0.5*this.squareSizeI<y && 1.11-(double)(0.5*this.squareSizeI)+(double)0.5*this.squareSizeI>y){
+				if( 1.11-(double)(0.5*this.squareSizeI)-this.squareSizeI<y && 3*this.squareSizeJ>x){
 					StdDraw.setPenColor(StdDraw.WHITE);
 					StdDraw.rectangle((double)6*squareSizeJ*2+displayBegining,1.06 , this.squareSizeJ, this.squareSizeI);
-					StdDraw.circle((double)6*squareSizeJ*2+displayBegining,1.06 , this.squareSizeJ);
+					StdDraw.filledRectangle((double)6*squareSizeJ*2+displayBegining,1.06 , this.squareSizeJ, this.squareSizeI);
 					notFinished=false;
 				}
 			this.board.afficheTable();	
 			this.board.afficheTableControl();
-			}
 			
 	        try {
 				Thread.sleep(20);
 			} catch (InterruptedException e) {
 				System.out.println("interuption");
 				//e.printStackTrace();
+			}			
+			
 			}
+			
+
 		}
 	}
 	
@@ -256,7 +265,13 @@ public class Interface implements Serializable{
 
 				//StdDraw.rectangle(this.squareSizeJ,1.11-(double)(0.5*this.squareSizeI), 2*this.squareSizeJ, this.squareSizeI);
 			}
-			if(this.squareSizeJ-this.squareSizeJ<x && this.squareSizeJ+this.squareSizeJ>0 && 1.11-(double)(0.5*this.squareSizeI)-(double)0.5*this.squareSizeI<y && 1.11-(double)(0.5*this.squareSizeI)+(double)0.5*this.squareSizeI>y){
+	        try {
+				Thread.sleep(20);
+			} catch (InterruptedException e) {
+				System.out.println("interuption");
+				//e.printStackTrace();
+			}
+			if(  1.11-(double)(0.5*this.squareSizeI)-this.squareSizeI<y && 3*this.squareSizeJ>x){
 				return 's';//for save
 			}
 		}

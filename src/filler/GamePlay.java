@@ -110,6 +110,12 @@ public class GamePlay {
 			System.out.println("do you want to change the board (true,false)");
 			if(sc.nextBoolean()){
 				interfaceG.creatBoard(board.height(), board.length());
+		        try {
+					Thread.sleep(25);
+				} catch (InterruptedException e) {
+					System.out.println("interuption");
+					//e.printStackTrace();
+				}
 			}
 		}
 	
