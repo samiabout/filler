@@ -9,7 +9,7 @@ import com.tdebroc.filler.game.Grid;
 public class MyConnector {
 	
 	Game game;
-	static String baseUrl = "http://62.210.105.118:8083";
+	static String baseUrl = "http://62.210.105.118:8081";
 	PlayerConnector playerConnector1 ;
 	
 	public MyConnector(){

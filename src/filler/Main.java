@@ -60,9 +60,10 @@ public class Main {
 		
 		//default values
 		
+//game setting
 		int nbPlayers=2;
-		int length=13;
-		int height=13;
+		int length=20;
+		int height=20;
 
 		
 		//avancé
@@ -73,7 +74,7 @@ public class Main {
 		boolean getOldSave=false;
 		
 
-		boolean playerIA[]={false,false}; 
+		boolean playerIA[]={true,true}; 
 		boolean ialevel[]={true,true};//ia difficile ou non
 		boolean playerConnected[]={true,false};//doit transmettre le coup
 		//boolean opponentConnected[]={false,true};//doit transmettre le coup
