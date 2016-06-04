@@ -33,7 +33,7 @@ public class Main {
 	static boolean consoleDisplay=false;
 	static boolean onlyResultDisplay=false;
 	
-	static boolean autoset =true;
+	static boolean autoset =false;
 	
 	static boolean playConnected=false;
 	

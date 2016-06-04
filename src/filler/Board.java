@@ -15,8 +15,7 @@ import jdk.internal.org.objectweb.asm.tree.IntInsnNode;
 
 
 public class Board implements Serializable{
-
-private boolean printDebug;
+private boolean printDebug=true;
 	int nbPlayers;//default value
 	boolean islet;
 	
@@ -40,7 +39,7 @@ private boolean printDebug;
 //——————————————————————————————————————————	
 	
 	public Board(int height, int length, int nbPlayers, boolean hexagonal, boolean obstacles , double obstaclesAmount, boolean islet,MyConnector aConnector) {
-		this.printDebug=false;
+		this.printDebug=true;
 		this.height=height;
 		this.length=length;
 		this.nbPlayers=nbPlayers;
@@ -334,10 +333,9 @@ private boolean printDebug;
     	if(this.printDebug){System.out.println(islet);}
     	while (this.islet){
     		this.islet=false;
-	    	//for (int i = 0; i < this.height; i++) {
-	    		//for (int j = 0; j < this.length; j++) {
-        	for (int i=this.height; i>=0;i--){			
-        		for(int j=this.length; j>=0;j--){
+	    	for (int i = 0; i < this.height; i++) {
+	    		for (int j = 0; j < this.length; j++) {
+
 	    			if (this.tableControl[i][j]==0){
 						if (islet(i, j, player)){if(this.printDebug){System.out.println("a");}
 							this.tableControl[i][j]=noPlayer;
@@ -514,6 +512,7 @@ private boolean printDebug;
 	
 	
 	public boolean isletParameterized(int i, int j,int iprevious,int jprevious, int ibeginning,int jbeginning,Player player,int type, boolean beginning) {//does the tile belong to an islet?
+		System.out.println(i+" "+j);
 		/*System.out.println(player.opponent1() +" "+ player.opponent2() + " " + player.opponent3());
 		System.out.println( (this.tableControl[i][j]==type)   +" "+
 				!this.neighborType(i, j, player.opponent1()) +" "+
@@ -559,32 +558,21 @@ private boolean printDebug;
 				switch (k%4) {
 				
 				case 0:
-					if (i<this.height-1)	{	if (this.tableControl[i+1][j]==type /*&&   
-													!this.neighborType(i+1, j,player.opponent1()) &&
-													!this.neighborType(i+1, j,player.opponent2()) &&
-													!this.neighborType(i+1, j,player.opponent3()) */)
+					if (i<this.height-1)	{	if (this.tableControl[i+1][j]==type )
 														{return isletParameterized(i+1, j,i,j, ibeginning, jbeginning, player, type,false);} }
 					break;
 				case 1:
-					if (j>0)				{	if (this.tableControl[i][j-1]==type /*&&   
-													!this.neighborType(i, j-1,player.opponent1()) &&
-													!this.neighborType(i, j-1,player.opponent2()) &&
-													!this.neighborType(i, j-1,player.opponent3()) */)
+					if (j>0)				{	if (this.tableControl[i][j-1]==type )
 														{return isletParameterized(i, j-1,i,j, ibeginning, jbeginning, player, type,false);} }
 					break;					
 				case 2:
-					if (i>0)				{	if (this.tableControl[i-1][j]==type /*&&   //if the tile==0 neighbor no opponent as neighbor
-													!this.neighborType(i-1, j,player.opponent1()) &&
-													!this.neighborType(i-1, j,player.opponent2()) &&
-													!this.neighborType(i-1, j,player.opponent3())*/ )
+					if (i>0)				{	if (this.tableControl[i-1][j]==type    //if the tile==0 neighbor no opponent as neighbor
+													 )
 														{return isletParameterized(i-1, j,i,j, ibeginning, jbeginning, player, type,false);}} //therefore, we test the neighbor
 					break;
 				
 				case 3:
-					if (j<this.length-1)	{	if (this.tableControl[i][j+1]==type /*&&   
-													!this.neighborType(i, j+1,player.opponent1()) &&
-													!this.neighborType(i, j+1,player.opponent2()) &&
-													!this.neighborType(i, j+1,player.opponent3())*/ )
+					if (j<this.length-1)	{	if (this.tableControl[i][j+1]==type  )
 														{return isletParameterized(i, j+1,i,j, ibeginning, jbeginning, player, type,false);} }		
 					break;
 					
