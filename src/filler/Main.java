@@ -23,9 +23,9 @@ import sun.net.www.content.image.gif;
 
 public class Main {
 	
-	private static Player[] tabJeu=new Player[4];
-	private static Board board=new Board();
-	private static Interface interfaceG= new Interface();
+	//private static Player[] tabJeu=new Player[4];
+	//private static Board board=new Board();
+	//private static Interface interfaceG= new Interface();
 
 	static Scanner sc  = new Scanner(System.in);	
 	
@@ -47,11 +47,12 @@ public class Main {
 	public static void main(String[] args){
 		
 		int nbParties=0;
+		
 		while(nbParties<1 || true){
 			
-		
-			
-		long allGameTime = System.currentTimeMillis();	
+		GamePlay game1=new GamePlay();
+	
+		//long allGameTime = System.currentTimeMillis();	
 		IAForcast2.profondeurB=5;
 		IAForcast2.profondeurA=5;
 		System.out.println();
@@ -61,26 +62,26 @@ public class Main {
 		//default values
 		
 //game setting
-		int nbPlayers=2;
-		int length=20;
-		int height=20;
+		/*int nbPlayers=2;//
+		int length=20;//
+		int height=20;//
 
 		
 		//avancé
-		boolean hexagonal=false;
-		boolean islet=false;
-		boolean obstacles=false;
-		double obstaclesAmount=30;
-		boolean getOldSave=false;
+		boolean hexagonal=false;//
+		boolean islet=false;//
+		boolean obstacles=false;//
+		double obstaclesAmount=30;//
+		boolean getOldSave=false;//
 		
 
-		boolean playerIA[]={true,true}; 
+		boolean playerIA[]={true,true}; //
 		boolean ialevel[]={true,true};//ia difficile ou non
 		boolean playerConnected[]={true,false};//doit transmettre le coup
 		//boolean opponentConnected[]={false,true};//doit transmettre le coup
 		
-		board=new Board();
-		Save oldSave=new Save();
+		board=new Board();//
+		Save oldSave=new Save();//
 		
 		
 		MyConnector aConnection=new MyConnector(true);
@@ -187,9 +188,9 @@ public class Main {
 			}
 		}
 
-			boolean fin = false;//utiliser pour boucler jusqu'à la fin du jeu
 			
-			int noTour=0;
+			
+			
 			
 			if(getOldSave){
 				board=oldSave.getBoard();
@@ -197,18 +198,18 @@ public class Main {
 				noTour=oldSave.getNoTour();
 				allGameTime=System.currentTimeMillis()-oldSave.getTime();
 				interfaceG= new Interface(board,2.5);	
-			}
+			}*/
+			boolean fin = false;//utiliser pour boucler jusqu'à la fin du jeu
+			int noTour=game1.noTour;
 			
-			
-			
-			board.afficheTableControl();	
+			game1.board.afficheTableControl();	
 	        do{
 	        	long startTime = System.currentTimeMillis();
-	        	boolean weSave=playgame(noTour%nbPlayers,ialevel,playerConnected,aConnection);
+	        	boolean weSave=GamePlay.playgame(noTour%game1.nbPlayers,game1);//game1.ialevel,game1.playerConnected,game1.aConnection
 	        	if(weSave){
 	        		System.out.println("give a name to your save");
 	        		String saveName=sc.next();
-	        		Save save=new Save(saveName,board, tabJeu,noTour,System.currentTimeMillis()-allGameTime);
+	        		Save save=new Save(saveName,game1.board, game1.tabJeu,noTour,System.currentTimeMillis()-game1.allGameTime);
 	        	}
 	        	
 	        	
@@ -220,54 +221,54 @@ public class Main {
 	        	
 	        	
 	        	if(consoleDisplay){
-    			board.afficheTableControl();
+	        		game1.board.afficheTableControl();
     			
-	        	board.afficheTable();	        		
+	        		game1.board.afficheTable();	        		
 	        	}
 	        	if(!Main.onlyResultDisplay){
 	        	System.out.println("no tour "+noTour);
 	        	}
-	        	fin=tabJeu[0].indicationGagnant(board); //renvoi un boolean utilisé pour la condition du while
+	        	fin=game1.tabJeu[0].indicationGagnant(game1.board); //renvoi un boolean utilisé pour la condition du while
 	        	if(!Main.onlyResultDisplay){System.out.println();}
 	        
 	        }while(!fin);
-	        System.out.println("durée de la partie: "+(double)(System.currentTimeMillis()- allGameTime)/1000+" s");
+	        System.out.println("durée de la partie: "+(double)(System.currentTimeMillis()- game1.allGameTime)/1000+" s");
 	        System.out.println("nb de tours : "+noTour);
 	 nbParties++;       
 	}
 	}
 	
-	private static boolean playgame(int i,boolean[] ialevel,boolean playerConnected[],MyConnector aConnector){
+	/*private static boolean playgame(int i,GamePlay game){//,boolean[] ialevel,boolean playerConnected[],MyConnector aConnector
 		char choix; 
-		tabJeu[i].setTurnParameters(board);
-		if(playConnected&&!playerConnected[i]  ){//adversaire connecté
-			tabJeu[i].montreDemandeCouleur();
-			choix=aConnector.getMove();
+		game.tabJeu[i].setTurnParameters(game.board);
+		if(playConnected&&!game.playerConnected[i]  ){//adversaire connecté
+			game.tabJeu[i].montreDemandeCouleur();
+			choix=game.aConnection.getMove();
 		}
-		else if(tabJeu[i] instanceof IA){//IA
-			choix=((IA)tabJeu[i]).demandeCouleur(board,ialevel[i],tabJeu[i]);
+		else if(game.tabJeu[i] instanceof IA){//IA
+			choix=((IA)game.tabJeu[i]).demandeCouleur(game.board,game.ialevel[i],game.tabJeu[i]);
 		}
 		else{//joueur humain
-			choix=tabJeu[i].demandeCouleur();
+			choix=game.tabJeu[i].demandeCouleur();
 			if( choix=='s'){
 				return true;
 			}
 		}
-		if(playConnected&&playerConnected[i]  ){
-			boolean checkSent=aConnector.sendMove(choix);
+		if(playConnected&&game.playerConnected[i]  ){
+			boolean checkSent=game.aConnection.sendMove(choix);
 			while(!checkSent){
 				System.out.println("———————————————>——————————>>>mauvais envoi");
-				checkSent=aConnector.sendMove(Board.couleurs.charAt((int)(Math.random() *6)));
+				checkSent=game.aConnection.sendMove(Board.couleurs.charAt((int)(Math.random() *6)));
 			}
 		}
 		
 		if(!Main.onlyResultDisplay){System.out.println("choisit "+choix);}
-		int nbModifs=board.setControl(choix,tabJeu[i]);//rajoute toutes les nouvelles cases controlées à tableControl
+		int nbModifs=game.board.setControl(choix,game.tabJeu[i]);//rajoute toutes les nouvelles cases controlées à tableControl
 		if(!Main.onlyResultDisplay){System.out.println("nb modifs "+ nbModifs);}
-		board.setCouleur(choix,tabJeu[i], interfaceG);
-		board.toMaj();	
+		game.board.setCouleur(choix,game.tabJeu[i], game.interfaceG);
+		game.board.toMaj();	
 		return false;
-	}
+	}*/
 
 
 	
