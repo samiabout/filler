@@ -83,6 +83,9 @@ public int getBestChoice() {
 	}
 	
 	public int myForcast(Board board){//ne prend en compte que mes coups //Player opponnent
+		if(this.ia.player==1){
+			board.Ireverse();
+		}
 		long timeIslet=0;
 		long timeforcast=System.currentTimeMillis();
 		boolean[] possibleChoices=new boolean[6];

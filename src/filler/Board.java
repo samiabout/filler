@@ -1,7 +1,9 @@
 package filler;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.text.spi.NumberFormatProvider;
+import java.util.Arrays;
 import java.util.Random;
 
 import org.w3c.dom.css.ElementCSSInlineStyle;
@@ -10,6 +12,7 @@ import com.sun.glass.ui.CommonDialogs.Type;
 import com.sun.jndi.url.iiopname.iiopnameURLContextFactory;
 import com.sun.org.apache.xalan.internal.utils.FeatureManager.Feature;
 import com.sun.org.apache.xalan.internal.xsltc.compiler.util.BooleanType;
+import com.sun.xml.internal.bind.v2.model.util.ArrayInfoUtil;
 
 import jdk.internal.org.objectweb.asm.tree.IntInsnNode;
 
@@ -361,6 +364,22 @@ private boolean printDebug=true;
 	public void changeTableControl(int i,int j,int nb){
 		this.tableControl[i][j]=nb;
 	}
+	
+	
+	public void Ireverse(){
+		for (int i = 0; i < table.length/2; i++) {
+			for (int u = 0; u < table[0].length/2; u++) {
+				int tempI = tableControl[i][u];
+				char tempC = table[i][u];
+				tableControl[i][u] = tableControl[tableControl[0].length-1-u][tableControl.length - 1 - i];
+				tableControl[tableControl[0].length-1-u][tableControl.length - 1 - i] = tempI;
+				table[i][u] = table[table[0].length-1-u][table.length - 1 - i];
+				table[table[0].length-1-u][table.length - 1 - i] = tempC;
+				
+			}
+		}
+	}
+	
 
 	//——————————————————————————————————————————
 	//————————————————————————————Boards display

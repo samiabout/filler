@@ -33,7 +33,7 @@ public class Main {
 	static boolean consoleDisplay=false;
 	static boolean onlyResultDisplay=false;
 	
-	static boolean autoset =false;
+	static boolean autoset =true;
 	
 	static boolean playConnected=false;
 	
@@ -202,7 +202,14 @@ public class Main {
 			boolean fin = false;//utiliser pour boucler jusqu'à la fin du jeu
 			int noTour=game1.noTour;
 			
-			game1.board.afficheTableControl();	
+			game1.board.afficheTableControl();
+			game1.board.afficheTable();
+			
+			System.out.println("on inverse");
+			game1.board.Ireverse();
+			
+			game1.board.afficheTableControl();
+			game1.board.afficheTable();
 	        do{
 	        	long startTime = System.currentTimeMillis();
 	        	boolean weSave=false;
