@@ -205,11 +205,11 @@ public class Main {
 			game1.board.afficheTableControl();
 			game1.board.afficheTable();
 			
-			System.out.println("on inverse");
+			/*System.out.println("on inverse");
 			game1.board.Ireverse();
 			
 			game1.board.afficheTableControl();
-			game1.board.afficheTable();
+			game1.board.afficheTable();*/
 	        do{
 	        	long startTime = System.currentTimeMillis();
 	        	boolean weSave=false;
