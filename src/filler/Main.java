@@ -29,13 +29,13 @@ public class Main {
 
 	static Scanner sc  = new Scanner(System.in);	
 	
-	static boolean graphicDisplay=true;
+	static boolean graphicDisplay=false;
 	static boolean consoleDisplay=true;
 	static boolean onlyResultDisplay=false;
 	
-	static boolean autoset =false;
+	static boolean autoset =true;
 	
-	static boolean playConnected=false;
+	static boolean playConnected=true;
 	
 	static int g1=0;//nombre de point par joureur
 	static int g2=0;
