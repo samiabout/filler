@@ -15,12 +15,16 @@ import filler.Menu.Bouton2Listener;
 
 public class Menu extends JFrame {
 
+	public static GamePlay game1;
 	private JButton bouton = new JButton("Jouer");
 	private JButton bouton2 = new JButton("Paramètres");
 	private Background background = new Background();
 	private JPanel buttons = new JPanel();
 
 	public Menu() {
+		boolean[] playerIADefault = { false, false, false, false };
+		int[] iaLevelDefault = { 0, 0, 0, 0 };
+		this.game1 = new GamePlay(2, 20, 20, false, false, false, 0, false, playerIADefault, iaLevelDefault);
 		this.setTitle("Filler");
 		this.setSize(500, 200);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,12 +41,13 @@ public class Menu extends JFrame {
 		buttons.add(bouton2, BorderLayout.EAST);
 		background.add(buttons, BorderLayout.SOUTH);
 		buttons.setOpaque(false);
+
 		this.setVisible(true);
 	}
 
 	class BoutonListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
-			BoardFrame boardFrame = new BoardFrame();
+			Main.launchGame();
 		}
 	}
 

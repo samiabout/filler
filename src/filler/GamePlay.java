@@ -8,23 +8,23 @@ public class GamePlay {
 	long allGameTime = 0;
 	static Scanner sc  = new Scanner(System.in);
 	
-	public int nbPlayers=4;
-	public int length=30;
-	public int height=15;
+	public int nbPlayers;
+	public int length;
+	public int height;
 	
-	public boolean hexagonal=false;
-	public boolean islet=false;
-	public boolean obstacles=false;
-	public double obstaclesAmount=30;
-	public boolean getOldSave=false;
+	public boolean hexagonal;
+	public boolean islet;
+	public boolean obstacles;
+	public double obstaclesAmount;
+	public boolean getOldSave;
 	public MyConnector aConnection=new MyConnector(true);
 	
 
-	public boolean playerIA[]={true,true,true,true}; 
-	public int ialevel[]={0,0,1,1};//ia difficile ou non
+	public boolean[] playerIA; 
+	public int[] ialevel;//ia difficile ou non
 	public boolean playerConnected[]={true,false};
 		//doit transmettre le coup
-	
+
 	//boolean opponentConnected[]={false,true};//doit transmettre le coup
 	public Interface interfaceG= new Interface();
 	public Player[] tabJeu=new Player[4];
@@ -32,7 +32,19 @@ public class GamePlay {
 	public Save oldSave=new Save();
 	public int noTour=0 ;
 	
-	public GamePlay() {
+	public GamePlay(int nbPlayers, int length, int height, boolean hexagonal, boolean islet, boolean obstacles, 
+			double obstaclesAmount, boolean getOldSave, boolean[] playerIA, int[] ialevel) {
+		this. nbPlayers = nbPlayers;
+		this.length = length;
+		this.height = height;
+		this.hexagonal = hexagonal;
+		this.islet = islet;
+		this.obstacles = obstacles;
+		this.obstaclesAmount = obstaclesAmount;
+		this.getOldSave = getOldSave;
+		this.playerIA = playerIA;
+		this.ialevel = ialevel;
+		
 		this.parameterize();
 		this.allGameTime = System.currentTimeMillis();
 	}
@@ -43,77 +55,76 @@ public class GamePlay {
 		if(Main.playConnected){
 			aConnection=new MyConnector();
 		}
-		if (!Main.autoset){
-			System.out.println("recupérer un sauvegarde? (true/false)");
-			getOldSave=sc.nextBoolean();
-			if(!getOldSave){
-					Main.playConnected=false;
-					playerIA[0]=false;playerIA[1]=false;
-					System.out.println("Choisir le nombre de joueurs (2, 3 ou 4) ");
-					nbPlayers = sc.nextInt();
-					playerIA[0]=false;playerIA[1]=false;
-					System.out.println("voulez vous une ou plusieurs IA?  (true,false)");
-					if(sc.nextBoolean()){
-						for (int i = 0; i < nbPlayers; i++) {
-							System.out.println("voulez-vous le joueur "+(i+1)+" comme IA? (true,false)");
-							playerIA[i]=sc.nextBoolean();
-							if(playerIA[i]){
-								System.out.print("de quel niveau? ");
-								if(i<2 && nbPlayers<=2){
-									System.out.println("(0 à 3)");
-								}else{
-									System.out.println("(0 ou 1)");
-								}
-								ialevel[i]=sc.nextInt();
-							}
-						}
-					}
-			
-					
-					
-				
-
-			
-			
-			
-
-				System.out.println("Choisir la taille du plateau(hauteur puis longueur )");
-			height=sc.nextInt();
-			length=sc.nextInt();
-				System.out.println("case héxagonales?");
-			hexagonal=sc.nextBoolean();
-				System.out.println("obstacles?");
-			obstacles=sc.nextBoolean();
-			if(obstacles){
-				System.out.println("quantité d'obstacles? (en%, max 30) ");
-			obstaclesAmount=sc.nextInt();					
-			}
-				System.out.println("case encerclée sont controlée? (true,false)");
-			islet=sc.nextBoolean();
-
+//		if (!Main.autoset){
+//			System.out.println("recupérer un sauvegarde? (true/false)");
+//			getOldSave=sc.nextBoolean();
+//			if(!getOldSave){
+//					Main.playConnected=false;
+//					playerIA[0]=false;playerIA[1]=false;
+//					System.out.println("Choisir le nombre de joueurs (2, 3 ou 4) ");
+//					nbPlayers = sc.nextInt();
+//					playerIA[0]=false;playerIA[1]=false;
+//					System.out.println("voulez vous une ou plusieurs IA?  (true,false)");
+//					if(sc.nextBoolean()){
+//						for (int i = 0; i < nbPlayers; i++) {
+//							System.out.println("voulez-vous le joueur "+(i+1)+" comme IA? (true,false)");
+//							playerIA[i]=sc.nextBoolean();
+//							if(playerIA[i]){
+//								System.out.print("de quel niveau? ");
+//								if(i<2 && nbPlayers<=2){
+//									System.out.println("(0 à 3)");
+//								}else{
+//									System.out.println("(0 ou 1)");
+//								}
+//								ialevel[i]=sc.nextInt();
+//							}
+//						}
+//					}
+//			
+//
+//				System.out.println("Choisir la taille du plateau(hauteur puis longueur )");
+//			height=sc.nextInt();
+//			length=sc.nextInt();
+//				System.out.println("case héxagonales?");
+//			hexagonal=sc.nextBoolean();
+//				System.out.println("obstacles?");
+//			obstacles=sc.nextBoolean();
+//			if(obstacles){
+//				System.out.println("quantité d'obstacles? (en%, max 30) ");
+//			obstaclesAmount=sc.nextInt();					
+//			}
+//				System.out.println("case encerclée sont controlée? (true,false)");
+//			islet=sc.nextBoolean();
+//
+//			board=new Board(height,length,nbPlayers,hexagonal,obstacles,obstaclesAmount,islet,aConnection);
+//			}
+//			else{
+//				oldSave=Save.getSave();
+//			}
+//		}
+//		else {
+//			board=new Board(height,length,nbPlayers,hexagonal,obstacles,obstaclesAmount,islet,aConnection);
+//		}
+		
+		if(!getOldSave){
 			board=new Board(height,length,nbPlayers,hexagonal,obstacles,obstaclesAmount,islet,aConnection);
-			}
-			else{
-				oldSave=Save.getSave();
-			}
-		}
-		else {
-			board=new Board(height,length,nbPlayers,hexagonal,obstacles,obstaclesAmount,islet,aConnection);
+		} else {
+			oldSave=Save.getSave();
 		}
 	
 		if(!getOldSave){
 			
 			interfaceG= new Interface(board,2.5);
-			System.out.println("do you want to change the board (true,false)");
-			if(sc.nextBoolean()){
-				interfaceG.creatBoard(board.height(), board.length());
-		        try {
-					Thread.sleep(25);
-				} catch (InterruptedException e) {
-					System.out.println("interuption");
-					//e.printStackTrace();
-				}
-			}
+//			System.out.println("do you want to change the board (true,false)");
+//			if(sc.nextBoolean()){
+//				interfaceG.creatBoard(board.height(), board.length());
+//		        try {
+//					Thread.sleep(25);
+//				} catch (InterruptedException e) {
+//					System.out.println("interuption");
+//					//e.printStackTrace();
+//				}
+//			}
 		}
 	
 	 
@@ -182,12 +193,33 @@ public class GamePlay {
 		game.board.setCouleur(choix,game.tabJeu[i], game.interfaceG);
 		game.board.toMaj();	
 		return false;
+	}	
+	
+	public void setHexagonal(boolean hexagonal){
+		this.hexagonal = hexagonal;
 	}
 	
+	public void setIslet(boolean islet){
+		this.islet = islet;
+	}
 	
+	public void setObstacles(boolean obstacles){
+		this.obstacles = obstacles;
+	}
 	
+	public void setLength(int length){
+		this.getOldSave = getOldSave;
+	}
 	
+	public void setHeight(int height){
+		this.getOldSave = getOldSave;
+	}
 	
+	public void setGetOldSave(boolean getOldSave){
+		this.getOldSave = getOldSave;
+	}
 	
-	
+	public void setObstaclesAmount(double obstaclesAmount){
+		this.obstaclesAmount = obstaclesAmount;
+	}
 }

@@ -6,6 +6,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -16,20 +20,25 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.sun.corba.se.spi.orbutil.fsm.Action;
+
+import filler.Menu.BoutonListener;
+
 public class ParametersFrame extends JFrame {
 
 	private CardLayout cl = new CardLayout();
 	private JPanel content = new JPanel();
 	private String[] listContent = { "CARD_1", "CARD_2" };
 	private JPanel container = new JPanel();
-	String[] tab = { "Humain", "IA facile", "Ia difficile" };
-	String[] tab2 = { "Aucun", "Humain", "IA facile", "Ia difficile" };
+	String[] tab = { "Humain", "IA niveau 1", "IA niveau 2", "IA niveau 3", "IA niveau 4" };
+	String[] tab2 = { "Aucun", "Humain", "IA niveau 1", "IA niveau 2", "IA niveau 3", "IA niveau 4" };
 	String[] tab3 = { "Carré", "Hexagonal" };
 	private JComboBox joueur1 = new JComboBox(tab);
 	private JComboBox joueur2 = new JComboBox(tab);
 	private JComboBox joueur3 = new JComboBox(tab2);
 	private JComboBox joueur4 = new JComboBox(tab2);
 	private JComboBox modeDeJeu = new JComboBox(tab3);
+	private JComboBox[] listeJoueurs = { joueur1, joueur2, joueur3, joueur4 };
 	private JLabel label1 = new JLabel("Joueur 1");
 	private JLabel label2 = new JLabel("Joueur 2");
 	private JLabel label3 = new JLabel("Joueur 3");
@@ -38,7 +47,9 @@ public class ParametersFrame extends JFrame {
 	private JCheckBox checkIslets = new JCheckBox("Ilots   ");
 	private JCheckBox checkObstacles = new JCheckBox("Obstacles");
 	private JTextField jtf1 = new JTextField("20");
-	private JLabel label6 = new JLabel("Taille du plateau                         ");
+	private JLabel label6 = new JLabel("    Longueur  ");
+	private JTextField jtf4 = new JTextField("20");
+	private JLabel label8 = new JLabel("    Largeur  ");
 	private JTextField jtf2 = new JTextField();
 	private JLabel label7 = new JLabel("Pourcentage d'obstacles (%)  ");
 	private JCheckBox checkSave = new JCheckBox("Charger une sauvegarde ");
@@ -67,8 +78,10 @@ public class ParametersFrame extends JFrame {
 		JPanel card2 = new JPanel();
 
 		JButton validation1 = new JButton("Valider");
+		validation1.addActionListener(new BoutonListener());
 		validation1.setPreferredSize(new Dimension(175, 25));
 		JButton validation2 = new JButton("Valider");
+		validation2.addActionListener(new BoutonListener());
 		validation2.setPreferredSize(new Dimension(175, 25));
 
 		JPanel field1 = new JPanel();
@@ -102,6 +115,8 @@ public class ParametersFrame extends JFrame {
 		b2.setLayout(new BoxLayout(b2, BoxLayout.LINE_AXIS));
 		b2.add(label6);
 		b2.add(jtf1);
+		b2.add(label8);
+		b2.add(jtf4);
 
 		JPanel b3 = new JPanel();
 		b3.setLayout(new BoxLayout(b3, BoxLayout.LINE_AXIS));
@@ -158,13 +173,62 @@ public class ParametersFrame extends JFrame {
 
 	class StateListener1 implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			jtf2.setEnabled(((JCheckBox)e.getSource()).isSelected());
+			jtf2.setEnabled(((JCheckBox) e.getSource()).isSelected());
 		}
 	}
-	
+
 	class StateListener2 implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			jtf3.setEnabled(((JCheckBox)e.getSource()).isSelected());
+			jtf3.setEnabled(((JCheckBox) e.getSource()).isSelected());
+		}
+	}
+
+	class BoutonListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			
+			int length = Integer.parseInt(jtf1.getText());
+			Menu.game1.setLength(length);
+			
+			int height = Integer.parseInt(jtf4.getText());
+			Menu.game1.setHeight(height);
+			
+			int nbPlayers = 0;
+			for (int i = 0; i < listeJoueurs.length; i++) {
+				if (listeJoueurs[i].getSelectedItem() != "Aucun") {
+					nbPlayers++;
+				}
+				if ((listeJoueurs[i].getSelectedItem() != "Aucun") && (listeJoueurs[i].getSelectedItem() != "Humain")) {
+					Menu.game1.playerIA[i] = true;
+				}
+				if (listeJoueurs[i].getSelectedItem() == "IA niveau 1") {
+					Menu.game1.ialevel[i] = 0;
+				}
+				if (listeJoueurs[i].getSelectedItem() == "IA niveau 2") {
+					Menu.game1.ialevel[i] = 1;
+				}
+				if (listeJoueurs[i].getSelectedItem() == "IA niveau 3") {
+					Menu.game1.ialevel[i] = 2;
+				}
+				if (listeJoueurs[i].getSelectedItem() == "IA niveau 4") {
+					Menu.game1.ialevel[i] = 3;
+				}
+			}
+			
+			Menu.game1.nbPlayers = nbPlayers;
+
+			if (modeDeJeu.getSelectedItem() == "Hexagonal") {
+				Menu.game1.setHexagonal(true);
+			} else {
+				Menu.game1.setHexagonal(false);
+			}
+			Menu.game1.setIslet(checkIslets.isSelected());
+			Menu.game1.setObstacles(checkObstacles.isSelected());
+			Menu.game1.setGetOldSave(checkSave.isSelected());
+			
+			if (checkObstacles.isSelected()) {
+				int obstaclesAmount = Integer.parseInt(jtf2.getText());
+				Menu.game1.setObstaclesAmount(obstaclesAmount);
+			}
 		}
 	}
 }
