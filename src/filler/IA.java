@@ -50,7 +50,6 @@ public class IA extends Player{
 		if(complexity==2){
 			return Board.couleurs.charAt(maybeIWillUseHisBestChoiceToPissHimOff(board, this, opponnent, Board.couleurs.indexOf(iaChoseColor(possibleChoices(), board))));
 		}
-		
 		/*if (complexity){
 		IAForcast test=new IAForcast(board, this,opponnent,5);	
 		return test.getBestChoice();
@@ -62,7 +61,7 @@ public class IA extends Player{
 			return Board.couleurs.charAt(superIA.getBestChoice());
 		}
 		
-		return iaChoseColor(possibleChoices(),board);//complexity == 1
+		return iaChoseColor(possibleChoices(),board);
 	}
 
 
@@ -95,9 +94,42 @@ public class IA extends Player{
 		return Board.couleurs.charAt(i);
 	}
 	
+	
+	
+	public int changesAmount(char choix, Board board){
+			int boarTest[][]=new int[board.length()][board.height()];
+			for (int i = 0; i < board.length(); i++) {
+				for (int j = 0; j < board.height(); j++) {
+					boarTest[i][j]=board.tableControl(i, j);
+				}
+			}
+			char [][]tableTest=board.table();
+			int nbModifs=0;
+	    	boolean finModif=false;
+	    	
+	    	while (!finModif){
+	    		finModif=true;
+	        	for (int i=0; i<board.length();i++){			//on balaie toutes les cases
+	    			for(int j=0; j<board.height();j++){	
+	    				if (boarTest[i][j]==this.player){	//la case doit appartenir au joueur
+	    					if (i>0)				{	if (tableTest[i-1][j]==choix && boarTest[i-1][j]==0)	{boarTest[i-1][j]=this.player;finModif=false;nbModifs++;} }
+	    					if (i<board.length()-1)	{	if (tableTest[i+1][j]==choix && boarTest[i+1][j]==0)	{boarTest[i+1][j]=this.player;finModif=false;nbModifs++;} }
+	    					if (j>0)				{	if (tableTest[i][j-1]==choix && boarTest[i][j-1]==0)	{boarTest[i][j-1]=this.player;finModif=false;nbModifs++;} }
+	    					if (j<board.height()-1)	{	if (tableTest[i][j+1]==choix && boarTest[i][j+1]==0)	{boarTest[i][j+1]=this.player;finModif=false;nbModifs++;} }
+	    				}//add conditions for hexagonal = true;
+	    				
+	    			}
+	    		}
+	    	}
+			return nbModifs;
+    	}
+
+//——————————————————————————————————————————————————	
+//—————————————————————————————————level 3——————————
+//——————————————————————————————————————————————————
 	private int maybeIWillUseHisBestChoiceToPissHimOff( Board board,IA iaToClone,Player opponnentToClone,int myBestChoice){//IA ninveau2
-		//utilisé si son premier choix est meilleur que mon premier
-		// et si j'utilise son meilleur choix est meilleur que son 2ème choix
+		//utilis si son premier choix est meilleur que mon premier
+		// et si j'utilise son meilleur choix est meilleur que son 2me choix
 		int mbc=0; //changes amount of my best choice
 		int Cmbc = myBestChoice;
 		int h1bc=0; //changes amount of his first best choice
@@ -138,40 +170,6 @@ public class IA extends Player{
 		return Cmbc;
 		
 	}
-	
-	
-	public int changesAmount(char choix, Board board){
-			int boarTest[][]=new int[board.length()][board.height()];
-			for (int i = 0; i < board.length(); i++) {
-				for (int j = 0; j < board.height(); j++) {
-					boarTest[i][j]=board.tableControl(i, j);
-				}
-			}
-			char [][]tableTest=board.table();
-			int nbModifs=0;
-	    	boolean finModif=false;
-	    	
-	    	while (!finModif){
-	    		finModif=true;
-	        	for (int i=0; i<board.length();i++){			//on balaie toutes les cases
-	    			for(int j=0; j<board.height();j++){	
-	    				if (boarTest[i][j]==this.player){	//la case doit appartenir au joueur
-	    					if (i>0)				{	if (tableTest[i-1][j]==choix && boarTest[i-1][j]==0)	{boarTest[i-1][j]=this.player;finModif=false;nbModifs++;} }
-	    					if (i<board.length()-1)	{	if (tableTest[i+1][j]==choix && boarTest[i+1][j]==0)	{boarTest[i+1][j]=this.player;finModif=false;nbModifs++;} }
-	    					if (j>0)				{	if (tableTest[i][j-1]==choix && boarTest[i][j-1]==0)	{boarTest[i][j-1]=this.player;finModif=false;nbModifs++;} }
-	    					if (j<board.height()-1)	{	if (tableTest[i][j+1]==choix && boarTest[i][j+1]==0)	{boarTest[i][j+1]=this.player;finModif=false;nbModifs++;} }
-	    				}//add conditions for hexagonal = true;
-	    				
-	    			}
-	    		}
-	    	}
-			return nbModifs;
-    	}
-
-//——————————————————————————————————————————————————	
-//—————————————————————————————————level 3——————————
-//——————————————————————————————————————————————————
-	
 	
 
 	

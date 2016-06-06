@@ -18,7 +18,7 @@ import jdk.internal.org.objectweb.asm.tree.IntInsnNode;
 
 
 public class Board implements Serializable{
-private boolean printDebug=true;
+private boolean printDebug=false;
 	int nbPlayers;//default value
 	boolean islet;
 	
@@ -333,7 +333,7 @@ private boolean printDebug=true;
     	}
     	//boolean islet=true;
     	boolean recordislet=this.islet;
-    	if(this.printDebug){System.out.println(islet);}
+    	//if(this.printDebug){System.out.println(islet);}
     	while (this.islet){
     		this.islet=false;
 	    	for (int i = 0; i < this.height; i++) {
@@ -531,7 +531,7 @@ private boolean printDebug=true;
 	
 	
 	public boolean isletParameterized(int i, int j,int iprevious,int jprevious, int ibeginning,int jbeginning,Player player,int type, boolean beginning) {//does the tile belong to an islet?
-		System.out.println(i+" "+j);
+		if(this.printDebug){System.out.println(i+" "+j);}
 		/*System.out.println(player.opponent1() +" "+ player.opponent2() + " " + player.opponent3());
 		System.out.println( (this.tableControl[i][j]==type)   +" "+
 				!this.neighborType(i, j, player.opponent1()) +" "+

@@ -30,10 +30,10 @@ public class Main {
 	static Scanner sc  = new Scanner(System.in);	
 	
 	static boolean graphicDisplay=true;
-	static boolean consoleDisplay=false;
+	static boolean consoleDisplay=true;
 	static boolean onlyResultDisplay=false;
 	
-	static boolean autoset =true;
+	static boolean autoset =false;
 	
 	static boolean playConnected=false;
 	
@@ -46,13 +46,13 @@ public class Main {
 		
 	public static void main(String[] args){
 		
-		Menu menu = new Menu();
+		int nbParties=0;
 		
-	}
+		while(nbParties<1 || true){
+			
+		GamePlay game1=new GamePlay();
 	
-	public static void launchGame(){
-	
-		long allGameTime = System.currentTimeMillis();	
+		//long allGameTime = System.currentTimeMillis();	
 		IAForcast2.profondeurB=5;
 		IAForcast2.profondeurA=5;
 		System.out.println();
@@ -62,17 +62,17 @@ public class Main {
 		//default values
 		
 //game setting
-		/*int nbPlayers=2;
-		int length=20;
-		int height=20;
+		/*int nbPlayers=2;//
+		int length=20;//
+		int height=20;//
 
 		
 		//avancé
-		boolean hexagonal=false;
-		boolean islet=false;
-		boolean obstacles=false;
-		double obstaclesAmount=30;
-		boolean getOldSave=false;
+		boolean hexagonal=false;//
+		boolean islet=false;//
+		boolean obstacles=false;//
+		double obstaclesAmount=30;//
+		boolean getOldSave=false;//
 		
 
 		boolean playerIA[]={true,true}; //
@@ -200,10 +200,10 @@ public class Main {
 				interfaceG= new Interface(board,2.5);	
 			}*/
 			boolean fin = false;//utiliser pour boucler jusqu'à la fin du jeu
-			int noTour=Menu.game1.noTour;
-			
-			Menu.game1.board.afficheTableControl();
-			Menu.game1.board.afficheTable();
+			int noTour=game1.noTour;
+			if(!Main.onlyResultDisplay){
+			game1.board.afficheTableControl();
+			game1.board.afficheTable();}
 			
 			/*System.out.println("on inverse");
 			game1.board.Ireverse();
@@ -214,12 +214,12 @@ public class Main {
 	        	long startTime = System.currentTimeMillis();
 	        	boolean weSave=false;
 	        	do{
-		        	weSave=GamePlay.playgame(noTour%Menu.game1.nbPlayers,Menu.game1);//game1.ialevel,game1.playerConnected,game1.aConnection
+		        	weSave=GamePlay.playgame(noTour%game1.nbPlayers,game1);//game1.ialevel,game1.playerConnected,game1.aConnection
 		        	if(weSave){
 		        		System.out.println("give a name to your save (or write \"abort\")");
 		        		String saveName=sc.next();
 		        		if(saveName!="abort") {
-		        			Save save=new Save(saveName,Menu.game1.board, Menu.game1.tabJeu,noTour,System.currentTimeMillis()-Menu.game1.allGameTime);
+		        			Save save=new Save(saveName,game1.board, game1.tabJeu,noTour,System.currentTimeMillis()-game1.allGameTime);
 		        		}
 		        	}
 	        	}while(weSave);
@@ -232,19 +232,20 @@ public class Main {
 	        	
 	        	
 	        	if(consoleDisplay){
-	        		Menu.game1.board.afficheTableControl();
+	        		game1.board.afficheTableControl();
     			
-	        		Menu.game1.board.afficheTable();	        		
+	        		game1.board.afficheTable();	        		
 	        	}
 	        	if(!Main.onlyResultDisplay){
 	        	System.out.println("no tour "+noTour);
 	        	}
-	        	fin=Menu.game1.tabJeu[0].indicationGagnant(Menu.game1.board); //renvoi un boolean utilisé pour la condition du while
+	        	fin=game1.tabJeu[0].indicationGagnant(game1.board); //renvoi un boolean utilisé pour la condition du while
 	        	if(!Main.onlyResultDisplay){System.out.println();}
 	        
 	        }while(!fin);
-	        System.out.println("durée de la partie: "+(double)(System.currentTimeMillis()- Menu.game1.allGameTime)/1000+" s");
-	        System.out.println("nb de tours : "+noTour);      
+	        System.out.println("durée de la partie: "+(double)(System.currentTimeMillis()- game1.allGameTime)/1000+" s");
+	        System.out.println("nb de tours : "+noTour);
+	 nbParties++;       
 	}
 	}
 	
@@ -279,3 +280,8 @@ public class Main {
 		game.board.toMaj();	
 		return false;
 	}*/
+
+
+	
+	
+}

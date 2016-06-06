@@ -328,8 +328,7 @@ public int getBestChoice() {
 	}
 
 	private int maybeIWillUseHisBestChoiceToPissHimOff( Board board,IA iaToClone,Player opponnentToClone,int myBestChoice){
-		//utilisé si son premier choix est meilleur que mon premier
-		// et si j'utilise son meilleur choix est meilleur que son 2ème choix
+		
 		int mbc=0; //changes amount of my best choice
 		int Cmbc = myBestChoice;
 		int h1bc=0; //changes amount of his first best choice
