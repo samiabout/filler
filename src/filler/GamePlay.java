@@ -9,6 +9,7 @@ public class GamePlay {
 	static Scanner sc  = new Scanner(System.in);
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
 	public int nbPlayers;
 	public int length;
 	public int height;
@@ -24,6 +25,8 @@ public class GamePlay {
 	public boolean[] playerIA; 
 	public int[] ialevel;//ia difficile ou non
 =======
+=======
+>>>>>>> parent of 199a38d... ia
 	public int nbPlayers=2;
 	public int length=10;
 	public int height=10;
@@ -38,6 +41,9 @@ public class GamePlay {
 
 	public boolean playerIA[]={false,false}; 
 	public boolean ialevel[]={true,true};//ia difficile ou non
+<<<<<<< HEAD
+>>>>>>> parent of 199a38d... ia
+=======
 >>>>>>> parent of 199a38d... ia
 	public boolean playerConnected[]={true,false};
 		//doit transmettre le coup
@@ -77,6 +83,7 @@ public class GamePlay {
 			getOldSave=sc.nextBoolean();
 			if(!getOldSave){
 <<<<<<< HEAD
+<<<<<<< HEAD
 					Main.playConnected=false;
 					playerIA[0]=false;playerIA[1]=false;
 					System.out.println("Choisir le nombre de joueurs (2, 3 ou 4) ");
@@ -100,6 +107,8 @@ public class GamePlay {
 					}
 			
 =======
+=======
+>>>>>>> parent of 199a38d... ia
 				Main.playConnected=false;
 				playerIA[0]=false;playerIA[1]=false;
 				System.out.println("Choisir le nombre de joueurs (2, 3 ou 4) ");
@@ -132,6 +141,9 @@ public class GamePlay {
 						ialevel[1]=playerIA[1]&&level;
 				}
 			}
+<<<<<<< HEAD
+>>>>>>> parent of 199a38d... ia
+=======
 >>>>>>> parent of 199a38d... ia
 
 				System.out.println("Choisir la taille du plateau(hauteur puis longueur )");
