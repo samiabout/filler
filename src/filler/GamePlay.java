@@ -55,56 +55,56 @@ public class GamePlay {
 		if(Main.playConnected){
 			aConnection=new MyConnector();
 		}
-//		if (!Main.autoset){
-//			System.out.println("recupérer un sauvegarde? (true/false)");
-//			getOldSave=sc.nextBoolean();
-//			if(!getOldSave){
-//					Main.playConnected=false;
-//					playerIA[0]=false;playerIA[1]=false;
-//					System.out.println("Choisir le nombre de joueurs (2, 3 ou 4) ");
-//					nbPlayers = sc.nextInt();
-//					playerIA[0]=false;playerIA[1]=false;
-//					System.out.println("voulez vous une ou plusieurs IA?  (true,false)");
-//					if(sc.nextBoolean()){
-//						for (int i = 0; i < nbPlayers; i++) {
-//							System.out.println("voulez-vous le joueur "+(i+1)+" comme IA? (true,false)");
-//							playerIA[i]=sc.nextBoolean();
-//							if(playerIA[i]){
-//								System.out.print("de quel niveau? ");
-//								if(i<2 && nbPlayers<=2){
-//									System.out.println("(0 à 3)");
-//								}else{
-//									System.out.println("(0 ou 1)");
-//								}
-//								ialevel[i]=sc.nextInt();
-//							}
-//						}
-//					}
-//			
-//
-//				System.out.println("Choisir la taille du plateau(hauteur puis longueur )");
-//			height=sc.nextInt();
-//			length=sc.nextInt();
-//				System.out.println("case héxagonales?");
-//			hexagonal=sc.nextBoolean();
-//				System.out.println("obstacles?");
-//			obstacles=sc.nextBoolean();
-//			if(obstacles){
-//				System.out.println("quantité d'obstacles? (en%, max 30) ");
-//			obstaclesAmount=sc.nextInt();					
-//			}
-//				System.out.println("case encerclée sont controlée? (true,false)");
-//			islet=sc.nextBoolean();
-//
-//			board=new Board(height,length,nbPlayers,hexagonal,obstacles,obstaclesAmount,islet,aConnection);
-//			}
-//			else{
-//				oldSave=Save.getSave();
-//			}
-//		}
-//		else {
-//			board=new Board(height,length,nbPlayers,hexagonal,obstacles,obstaclesAmount,islet,aConnection);
-//		}
+		if (!Main.autoset){
+			System.out.println("recupérer un sauvegarde? (true/false)");
+			getOldSave=sc.nextBoolean();
+			if(!getOldSave){
+					Main.playConnected=false;
+					playerIA[0]=false;playerIA[1]=false;
+					System.out.println("Choisir le nombre de joueurs (2, 3 ou 4) ");
+					nbPlayers = sc.nextInt();
+					playerIA[0]=false;playerIA[1]=false;
+					System.out.println("voulez vous une ou plusieurs IA?  (true,false)");
+					if(sc.nextBoolean()){
+						for (int i = 0; i < nbPlayers; i++) {
+							System.out.println("voulez-vous le joueur "+(i+1)+" comme IA? (true,false)");
+							playerIA[i]=sc.nextBoolean();
+							if(playerIA[i]){
+								System.out.print("de quel niveau? ");
+								if(i<2 && nbPlayers<=2){
+									System.out.println("(0 à 3)");
+								}else{
+									System.out.println("(0 ou 1)");
+								}
+								ialevel[i]=sc.nextInt();
+							}
+						}
+					}
+			
+
+				System.out.println("Choisir la taille du plateau(hauteur puis longueur )");
+			height=sc.nextInt();
+			length=sc.nextInt();
+				System.out.println("case héxagonales?");
+			hexagonal=sc.nextBoolean();
+				System.out.println("obstacles?");
+			obstacles=sc.nextBoolean();
+			if(obstacles){
+				System.out.println("quantité d'obstacles? (en%, max 30) ");
+			obstaclesAmount=sc.nextInt();					
+			}
+				System.out.println("case encerclée sont controlée? (true,false)");
+			islet=sc.nextBoolean();
+
+			board=new Board(height,length,nbPlayers,hexagonal,obstacles,obstaclesAmount,islet,aConnection);
+			}
+			else{
+				oldSave=Save.getSave();
+			}
+		}
+		else {
+			board=new Board(height,length,nbPlayers,hexagonal,obstacles,obstaclesAmount,islet,aConnection);
+		}
 		
 		if(!getOldSave){
 			board=new Board(height,length,nbPlayers,hexagonal,obstacles,obstaclesAmount,islet,aConnection);
@@ -115,16 +115,16 @@ public class GamePlay {
 		if(!getOldSave){
 			
 			interfaceG= new Interface(board,2.5);
-//			System.out.println("do you want to change the board (true,false)");
-//			if(sc.nextBoolean()){
-//				interfaceG.creatBoard(board.height(), board.length());
-//		        try {
-//					Thread.sleep(25);
-//				} catch (InterruptedException e) {
-//					System.out.println("interuption");
-//					//e.printStackTrace();
-//				}
-//			}
+			System.out.println("do you want to change the board (true,false)");
+			if(sc.nextBoolean()){
+				interfaceG.creatBoard(board.height(), board.length());
+		        try {
+					Thread.sleep(25);
+				} catch (InterruptedException e) {
+					System.out.println("interuption");
+					//e.printStackTrace();
+				}
+			}
 		}
 	
 	 

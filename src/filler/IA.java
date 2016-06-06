@@ -47,6 +47,10 @@ public class IA extends Player{
 			return iaRandom(possibleChoices(), board);
 		}
 		
+		if(complexity==2){
+			return Board.couleurs.charAt(maybeIWillUseHisBestChoiceToPissHimOff(board, this, opponnent, Board.couleurs.indexOf(iaChoseColor(possibleChoices(), board))));
+		}
+		
 		/*if (complexity){
 		IAForcast test=new IAForcast(board, this,opponnent,5);	
 		return test.getBestChoice();
@@ -58,7 +62,7 @@ public class IA extends Player{
 			return Board.couleurs.charAt(superIA.getBestChoice());
 		}
 		
-		return iaChoseColor(possibleChoices(),board);
+		return iaChoseColor(possibleChoices(),board);//complexity == 1
 	}
 
 
@@ -91,6 +95,49 @@ public class IA extends Player{
 		return Board.couleurs.charAt(i);
 	}
 	
+	private int maybeIWillUseHisBestChoiceToPissHimOff( Board board,IA iaToClone,Player opponnentToClone,int myBestChoice){//IA ninveau2
+		//utilisé si son premier choix est meilleur que mon premier
+		// et si j'utilise son meilleur choix est meilleur que son 2ème choix
+		int mbc=0; //changes amount of my best choice
+		int Cmbc = myBestChoice;
+		int h1bc=0; //changes amount of his first best choice
+		int Ch1bc = 0;
+		int ih1bc=0;  // changes amount if I use his first best choice
+		int h2bc=0; //changes amount of his second best choice
+			
+			boolean[] possibleChoices = iaToClone.possibleChoices();
+			boolean[] opponentPossibleChoices = opponnentToClone.possibleChoiceswithOpponentColor();
+			
+			Board testIABoard=new Board(board);
+			mbc=testIABoard.setControl(Board.couleurs.charAt(Cmbc),iaToClone);
+			
+			for (int i = 0; i < 6; i++) {
+
+				if (opponentPossibleChoices[i]){
+					Board testOpponentBoard = new Board(board);
+					int opponentChanges = testOpponentBoard.setControl(Board.couleurs.charAt(i), opponnentToClone);
+					if (opponentChanges>h1bc){
+						h1bc=opponentChanges;
+						Ch1bc=i;
+					}
+					if (opponentChanges>h2bc && opponentChanges<=h1bc && Ch1bc!=i){
+						h2bc=opponentChanges;
+						
+					}
+				}
+				Board testOpponentBoard = new Board(board);
+				ih1bc=testOpponentBoard.setControl(Board.couleurs.charAt(Ch1bc), iaToClone);
+			}
+		
+		if (mbc>h1bc || h1bc==h2bc){
+			return Cmbc;
+		}
+		if (mbc<=h1bc && ih1bc>h2bc){
+			return Ch1bc;
+		}
+		return Cmbc;
+		
+	}
 	
 	
 	public int changesAmount(char choix, Board board){

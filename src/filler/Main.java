@@ -52,12 +52,12 @@ public class Main {
 	
 	public static void launchGame(){
 	
-		//long allGameTime = System.currentTimeMillis();	
+		long allGameTime = System.currentTimeMillis();	
 		IAForcast2.profondeurB=5;
 		IAForcast2.profondeurA=5;
-//		System.out.println();
-//		System.out.print(g1);
-//		System.out.println(" "+g2);
+		System.out.println();
+		System.out.print(g1);
+		System.out.println(" "+g2);
 		
 		//default values
 		
