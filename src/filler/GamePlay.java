@@ -8,6 +8,7 @@ public class GamePlay {
 	long allGameTime = 0;
 	static Scanner sc  = new Scanner(System.in);
 	
+<<<<<<< HEAD
 	public int nbPlayers;
 	public int length;
 	public int height;
@@ -22,6 +23,22 @@ public class GamePlay {
 
 	public boolean[] playerIA; 
 	public int[] ialevel;//ia difficile ou non
+=======
+	public int nbPlayers=2;
+	public int length=10;
+	public int height=10;
+	
+	public boolean hexagonal=false;
+	public boolean islet=false;
+	public boolean obstacles=false;
+	public double obstaclesAmount=30;
+	public boolean getOldSave=false;
+	public MyConnector aConnection=new MyConnector(true);
+	
+
+	public boolean playerIA[]={false,false}; 
+	public boolean ialevel[]={true,true};//ia difficile ou non
+>>>>>>> parent of 199a38d... ia
 	public boolean playerConnected[]={true,false};
 		//doit transmettre le coup
 
@@ -59,6 +76,7 @@ public class GamePlay {
 			System.out.println("recupérer un sauvegarde? (true/false)");
 			getOldSave=sc.nextBoolean();
 			if(!getOldSave){
+<<<<<<< HEAD
 					Main.playConnected=false;
 					playerIA[0]=false;playerIA[1]=false;
 					System.out.println("Choisir le nombre de joueurs (2, 3 ou 4) ");
@@ -81,6 +99,40 @@ public class GamePlay {
 						}
 					}
 			
+=======
+				Main.playConnected=false;
+				playerIA[0]=false;playerIA[1]=false;
+				System.out.println("Choisir le nombre de joueurs (2, 3 ou 4) ");
+			nbPlayers = sc.nextInt();
+			if(nbPlayers==2){
+				playerIA[0]=false;playerIA[1]=false;
+				System.out.println("voulez vous une IA (0,1,2)");
+				int nbIA=sc.nextInt();
+				if (nbIA==2){
+					playerIA[0]=true;playerIA[1]=true;
+					System.out.println("level IA 1 difficile? (true,false)");
+					ialevel[0]=sc.nextBoolean();
+					System.out.println("level IA 2 difficile? (true,false)");
+					ialevel[1]=sc.nextBoolean();
+					
+				}
+				if(nbIA==1){
+					System.out.println("Joueur 1 ou 2? (1,2)");
+					int plIA=sc.nextInt();
+					if (plIA==2){
+						playerIA[1]=true;playerIA[0]=false;
+					}
+					else{
+						playerIA[0]=true;playerIA[1]=false;
+					}
+					ialevel[0]=false;ialevel[1]=false;
+					System.out.println("IA difficile? (true,false)");
+						boolean level=sc.nextBoolean();
+						ialevel[0]=playerIA[0]&&level;
+						ialevel[1]=playerIA[1]&&level;
+				}
+			}
+>>>>>>> parent of 199a38d... ia
 
 				System.out.println("Choisir la taille du plateau(hauteur puis longueur )");
 			height=sc.nextInt();
@@ -129,16 +181,22 @@ public class GamePlay {
 	
 	 
 	
-	for (int i = 0; i < nbPlayers; i++) {
-		if (playerIA[i]){
-			tabJeu[i]=new IA(i+1,nbPlayers, interfaceG);
-		}
-		else{
-			tabJeu[i]=new Player(i+1,nbPlayers, interfaceG);
-		}
-	}	
-	 
 
+	 
+	 if(playerIA[0]){
+		 tabJeu[0]=new IA(1,nbPlayers, interfaceG);
+	 }
+	 else{
+		 tabJeu[0]=new Player(1,nbPlayers, interfaceG);
+	 }
+	 if(playerIA[1]){
+		 tabJeu[1]=new IA(2,nbPlayers, interfaceG);
+	 }
+	 else{
+		 tabJeu[1]=new Player(2,nbPlayers, interfaceG);
+	 }
+	tabJeu[2]=new Player(3,nbPlayers, interfaceG);
+	tabJeu[3]=new Player(4,nbPlayers, interfaceG);
 	
 	
 	if(!getOldSave){
