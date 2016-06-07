@@ -24,8 +24,8 @@ private boolean printDebug=false;
 	
 	static int caca=6;
 	
-	private int tableControl[][]=new int[50][50];
-	private char table[][]=new char[50][50];
+	private int tableControl[][]=new int[21][21];
+	private char table[][]=new char[21][21];
 	
 	private int height;//default value
 	private int length;//default value
@@ -358,6 +358,75 @@ private boolean printDebug=false;
 		return nbModifs;
 	}
 	
+	public int setControl(char choix, Player player,boolean withoutIslet){//Board//transforme le tableauControl avec les modifications nouveau control
+		int nbModifs=0;
+		int nbModifsI=0;
+		int noPlayer = player.player();
+    	boolean finModif=false;
+    	while (!finModif){
+    		finModif=true;
+        	for (int i=this.height; i>=0;i--){			
+        		for(int j=this.length; j>=0;j--){		
+    				if (this.tableControl[i][j]==noPlayer){	//la case doit appartenir au joueur
+    					if (i>0)				{	if (this.table[i-1][j]==choix && this.tableControl[i-1][j]==0)	{this.tableControl[i-1][j]=noPlayer;nbModifs++;finModif=false;} }
+    					if (i<this.height-1)	{	if (this.table[i+1][j]==choix && this.tableControl[i+1][j]==0)	{this.tableControl[i+1][j]=noPlayer;nbModifs++;finModif=false;} }
+    					if (j>0)				{	if (this.table[i][j-1]==choix && this.tableControl[i][j-1]==0)	{this.tableControl[i][j-1]=noPlayer;nbModifs++;finModif=false;} }
+    					if (j<this.length-1)	{	if (this.table[i][j+1]==choix && this.tableControl[i][j+1]==0)	{this.tableControl[i][j+1]=noPlayer;nbModifs++;finModif=false;} }
+    					if (hexagonal){
+    						if(j%2==1) {
+    							if(j>0 && i>0){
+    								if (this.table[i-1][j-1]==choix && this.tableControl[i-1][j-1]==0)	{this.tableControl[i-1][j-1]=noPlayer;nbModifs++;finModif=false;} 
+    							}
+								if(j<this.length-1 && i>0){
+    								if (this.table[i-1][j+1]==choix && this.tableControl[i-1][j+1]==0)	{this.tableControl[i-1][j+1]=noPlayer;nbModifs++;finModif=false;} 
+    							}
+    						}
+    						if(j%2==0){
+       							if(j>0 && i<this.length-1){
+    								if (this.table[i+1][j-1]==choix && this.tableControl[i+1][j-1]==0)	{this.tableControl[i+1][j-1]=noPlayer;nbModifs++;finModif=false;} 
+       							}
+								if(j<this.length-1 && i<this.length-1){
+    								if (this.table[i+1][j+1]==choix && this.tableControl[i+1][j+1]==0)	{this.tableControl[i+1][j+1]=noPlayer;nbModifs++;finModif=false;}     							
+    							
+    							}
+    						}
+    					
+    				}
+    				}
+    			}
+    		}
+    	}
+    	//boolean islet=true;
+    	boolean recordislet=this.islet;
+    	//if(this.printDebug){System.out.println(islet);}
+    	while (this.islet){
+    		this.islet=false;
+	    	for (int i = 0; i < this.height; i++) {
+	    		for (int j = 0; j < this.length; j++) {
+
+	    			if (this.tableControl[i][j]==0){
+						if (islet(i, j, player)){if(this.printDebug){System.out.println("a");}
+							this.tableControl[i][j]=noPlayer;
+							//this.tableControl[i][j]=caca;caca++;//player.player();
+							nbModifsI++;//position à vérifier
+							this.islet=true;
+						}
+	    			}
+	    			
+					// System.out.println("b");
+				}
+				
+			}	
+    	}
+    	this.islet=recordislet;
+    	if(!withoutIslet){
+    		nbModifs+=nbModifsI;
+    	}
+		return nbModifs;
+	}
+	
+	
+	
 	public void changeColor(int i, int j , char choix){
 		this.table[i][j]=choix;
 	}
@@ -367,17 +436,19 @@ private boolean printDebug=false;
 	
 	
 	public void Ireverse(){
-		for (int i = 0; i < table.length/2; i++) {
-			for (int u = 0; u < table[0].length/2; u++) {
+		long temps=System.currentTimeMillis();
+		for (int i = 0; i <height(); i++) {
+			for (int u = 0; u <length()-i; u++) {
 				int tempI = tableControl[i][u];
 				char tempC = table[i][u];
-				tableControl[i][u] = tableControl[tableControl[0].length-1-u][tableControl.length - 1 - i];
-				tableControl[tableControl[0].length-1-u][tableControl.length - 1 - i] = tempI;
-				table[i][u] = table[table[0].length-1-u][table.length - 1 - i];
-				table[table[0].length-1-u][table.length - 1 - i] = tempC;
+				tableControl[i][u] = tableControl[length()-1-u][height() - 1 - i];
+				tableControl[length()-1-u][height() - 1 - i] = tempI;
+				table[i][u] = table[length()-1-u][height() - 1 - i];
+				table[length()-1-u][height() - 1 - i] = tempC;
 				
 			}
 		}
+		System.out.println("temps reverrrssee"+(System.currentTimeMillis()-temps));
 	}
 	
 

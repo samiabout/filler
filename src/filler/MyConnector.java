@@ -9,7 +9,7 @@ import com.tdebroc.filler.game.Grid;
 public class MyConnector {
 	
 	Game game;
-	static String baseUrl = "http://62.210.105.118:8081";
+	static String baseUrl = "http://62.210.105.118:8083";
 	PlayerConnector playerConnector1 ;
 	
 	public MyConnector(){
@@ -17,11 +17,13 @@ public class MyConnector {
 		Scanner scanner = new Scanner(System.in);
 		//new MyConnector().onlyIA(scanner.nextInt());
 		int gameId=scanner.nextInt();
-		scanner.close();
 		System.out.println("Open a new game is " + gameId);
 		this.playerConnector1 = new PlayerConnector(gameId, baseUrl);
 		playerConnector1.registerPlayer("BlueBird");
 		this.game = playerConnector1.getGame();
+		System.out.println("write and press enter to start");
+		String aString=scanner.next();
+		scanner.close();
 	}
 	
 	public MyConnector(boolean pouet){

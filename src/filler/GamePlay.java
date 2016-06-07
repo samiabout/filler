@@ -44,6 +44,10 @@ public class GamePlay {
 			aConnection=new MyConnector();
 		}
 		if (!Main.autoset){
+		System.out.println("voulez vous utiliser les paramètres par défaut? (true,false)");
+		Main.autoset=sc.nextBoolean();
+		}	
+		if (!Main.autoset){
 			System.out.println("recupérer un sauvegarde? (true/false)");
 			getOldSave=sc.nextBoolean();
 			if(!getOldSave){
@@ -175,7 +179,8 @@ public class GamePlay {
 			boolean checkSent=game.aConnection.sendMove(choix);
 			while(!checkSent){
 				System.out.println("———————————————>——————————>>>mauvais envoi");
-				checkSent=game.aConnection.sendMove(Board.couleurs.charAt((int)(Math.random() *6)));
+				choix=Board.couleurs.charAt((int)(Math.random() *6));
+				checkSent=game.aConnection.sendMove(choix);
 			}
 		}
 		

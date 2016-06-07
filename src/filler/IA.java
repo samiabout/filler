@@ -40,13 +40,11 @@ public class IA extends Player{
 		System.out.println("joueur" + this.player);	
 		}
 		
-		
 		this.intrefaceG.displayCommands(possibleChoices());
 		
 		if(complexity==0){
 			return iaRandom(possibleChoices(), board);
 		}
-		
 		if(complexity==2){
 			return Board.couleurs.charAt(maybeIWillUseHisBestChoiceToPissHimOff(board, this, opponnent, Board.couleurs.indexOf(iaChoseColor(possibleChoices(), board))));
 		}
@@ -54,13 +52,16 @@ public class IA extends Player{
 		IAForcast test=new IAForcast(board, this,opponnent,5);	
 		return test.getBestChoice();
 		}*/
-		
-		if (!allmostTheEnd && complexity==4){
+		if (!allmostTheEnd && complexity==4 && this.player==1){
 			IAForcast2 superIA=new IAForcast2(board, this, opponnent);
 			//System.out.println("——> "+Board.couleurs.charAt(superIA.getBestChoice()));
 			return Board.couleurs.charAt(superIA.getBestChoice());
 		}
-		
+		if (!allmostTheEnd && complexity==4 && this.player==2){
+			IAForcast3 superIA=new IAForcast3(board, this, opponnent);
+			//System.out.println("——> "+Board.couleurs.charAt(superIA.getBestChoice()));
+			return Board.couleurs.charAt(superIA.getBestChoice());
+		}
 		return iaChoseColor(possibleChoices(),board);
 	}
 
