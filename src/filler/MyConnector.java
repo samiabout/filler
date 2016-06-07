@@ -37,6 +37,7 @@ public class MyConnector {
 			for (int u = 0; u < taille; u++) {
 				System.out.print(Character.toLowerCase(grille.getCell(i, u).getColor())+" ");
 				table[i][u]=Character.toLowerCase(grille.getCell(i, u).getColor());
+				System.out.print(table[i][u]);
 			}
 			System.out.println();
 		}
@@ -52,14 +53,15 @@ public class MyConnector {
 		return playerConnector1.sendMove(Character.toUpperCase(choix));
 	}
 	
-	public char getMove(){
+	public char getMove(Player player){
 		/*playerConnector1.waitOppenentsAndGetTheirMoves();
 		char choix=getLastMovePlayed(this.game);*/
 		
 		Game game = playerConnector1.waitOppenentsAndGetTheirMoves();
 		char choix=getLastMovePlayed(game);
-
-		
+		if(player.player==1){
+			choix=this.playerConnector1.getGame().getGrid().getCell(0, 0).getColor();
+		}
 		System.out.println("on a récupéré çççççççaaaa!!!!!"+ choix);
 		choix=Character.toLowerCase(choix);
 		System.out.println("on a récupéré çççççççaaaa!!!!!"+ choix);

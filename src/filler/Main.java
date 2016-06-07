@@ -29,11 +29,11 @@ public class Main {
 	
 	static boolean graphicDisplay=false;
 	static boolean consoleDisplay=false;
-	static boolean onlyResultDisplay=true;
+	static boolean onlyResultDisplay=false;
 	
 	static boolean autoset =true;
 	
-	static boolean playConnected=false;//connnector projet IA
+	static boolean playConnected=true;//connnector projet IA
 	
 	static int g1=0;//nombre de point par joureur
 	static int g2=0;

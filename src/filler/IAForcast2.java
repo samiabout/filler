@@ -242,7 +242,8 @@ public void setBestChoice(int newChoice) {
 								}
 								
 							}}}}}
-		if (bestAmountChoiceModifs>3*bestBorderChoiceModifs){
+		if ((float)bestAmountChoiceModifs>(float)((float)2.5*(float)bestBorderChoiceModifs)){
+			
 			if(!Main.onlyResultDisplay)	{
 				System.out.println("choix amount");
 			}

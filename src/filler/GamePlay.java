@@ -9,8 +9,8 @@ public class GamePlay {
 	static Scanner sc  = new Scanner(System.in);
 	
 	public int nbPlayers=2;
-	public int length=20;
-	public int height=20;
+	public int length=24;
+	public int height=24;
 	
 	public boolean hexagonal=false;
 	public boolean islet=false;
@@ -22,7 +22,7 @@ public class GamePlay {
 
 	public boolean playerIA[]={true,true,false,false}; 
 	public int ialevel[]={4,4,1,1};//ia difficile ou non
-	public boolean playerConnected[]={false,true};
+	public boolean playerConnected[]={true,false};
 		//doit transmettre le coup
 	
 	//boolean opponentConnected[]={false,true};//doit transmettre le coup
@@ -51,6 +51,7 @@ public class GamePlay {
 			System.out.println("recupérer un sauvegarde? (true/false)");
 			getOldSave=sc.nextBoolean();
 			if(!getOldSave){
+				System.out.println("ici");
 					Main.playConnected=false;
 					playerIA[0]=false;playerIA[1]=false;
 					System.out.println("Choisir le nombre de joueurs (2, 3 ou 4) ");
@@ -164,7 +165,7 @@ public class GamePlay {
 		game.tabJeu[i].setTurnParameters(game.board);
 		if(Main.playConnected&&!game.playerConnected[i]  ){//adversaire connecté
 			game.tabJeu[i].montreDemandeCouleur();
-			choix=game.aConnection.getMove();
+			choix=game.aConnection.getMove(game.tabJeu[i]);
 		}
 		else if(game.tabJeu[i] instanceof IA){//IA
 			choix=((IA)game.tabJeu[i]).demandeCouleur(game.board,game.ialevel[i],game.tabJeu[i]);

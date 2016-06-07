@@ -52,12 +52,12 @@ public class IA extends Player{
 		IAForcast test=new IAForcast(board, this,opponnent,5);	
 		return test.getBestChoice();
 		}*/
-		if (!allmostTheEnd && complexity==4 && this.player==1){
+		if (!allmostTheEnd && complexity==4 ){//&& this.player==3
 			IAForcast2 superIA=new IAForcast2(board, this, opponnent);
 			//System.out.println("——> "+Board.couleurs.charAt(superIA.getBestChoice()));
 			return Board.couleurs.charAt(superIA.getBestChoice());
 		}
-		if (!allmostTheEnd && complexity==4 && this.player==2){
+	if (!allmostTheEnd && complexity==4 && this.player==3){
 			IAForcast3 superIA=new IAForcast3(board, this, opponnent);
 			//System.out.println("——> "+Board.couleurs.charAt(superIA.getBestChoice()));
 			return Board.couleurs.charAt(superIA.getBestChoice());

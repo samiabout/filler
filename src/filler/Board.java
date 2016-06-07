@@ -24,8 +24,8 @@ private boolean printDebug=false;
 	
 	static int caca=6;
 	
-	private int tableControl[][]=new int[21][21];
-	private char table[][]=new char[21][21];
+	private int tableControl[][]=new int[43][43];
+	private char table[][]=new char[43][43];
 	
 	private int height;//default value
 	private int length;//default value
