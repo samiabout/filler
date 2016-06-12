@@ -9,23 +9,22 @@ public class GamePlay {
 	static Scanner sc  = new Scanner(System.in);
 	
 	public int nbPlayers=2;
-	public int length=24;
-	public int height=24;
+	public int length=22;
+	public int height=22;
 	
 	public boolean hexagonal=false;
-	public boolean islet=false;
+	public boolean islet=true;
 	public boolean obstacles=false;
 	public double obstaclesAmount=30;
 	public boolean getOldSave=false;
 	public MyConnector aConnection=new MyConnector(true);
 	
 
-	public boolean playerIA[]={true,true,false,false}; 
-	public int ialevel[]={4,4,1,1};//ia difficile ou non
-	public boolean playerConnected[]={true,false};
+	public boolean playerIA[]={false,false,false,false}; 
+	public int ialevel[]={4,4,1,1};//
+	public boolean playerConnected[]={false,true};//(exxp concours IA)
 		//doit transmettre le coup
 	
-	//boolean opponentConnected[]={false,true};//doit transmettre le coup
 	public Interface interfaceG= new Interface();
 	public Player[] tabJeu=new Player[4];
 	public Board board=new Board();
@@ -51,7 +50,6 @@ public class GamePlay {
 			System.out.println("recupérer un sauvegarde? (true/false)");
 			getOldSave=sc.nextBoolean();
 			if(!getOldSave){
-				System.out.println("ici");
 					Main.playConnected=false;
 					playerIA[0]=false;playerIA[1]=false;
 					System.out.println("Choisir le nombre de joueurs (2, 3 ou 4) ");

@@ -22,7 +22,7 @@ private boolean printDebug=false;
 	int nbPlayers;//default value
 	boolean islet;
 	
-	static int caca=6;
+	static int cac=6;//(déboguage)
 	
 	private int tableControl[][]=new int[43][43];
 	private char table[][]=new char[43][43];
@@ -42,7 +42,7 @@ private boolean printDebug=false;
 //——————————————————————————————————————————	
 	
 	public Board(int height, int length, int nbPlayers, boolean hexagonal, boolean obstacles , double obstaclesAmount, boolean islet,MyConnector aConnector) {
-		this.printDebug=true;
+		this.printDebug=false;
 		this.height=height;
 		this.length=length;
 		this.nbPlayers=nbPlayers;
@@ -342,7 +342,7 @@ private boolean printDebug=false;
 	    			if (this.tableControl[i][j]==0){
 						if (islet(i, j, player)){if(this.printDebug){System.out.println("a");}
 							this.tableControl[i][j]=noPlayer;
-							//this.tableControl[i][j]=caca;caca++;//player.player();
+							//this.tableControl[i][j]=cac;cac++;//player.player();
 							nbModifs++;//position à vérifier
 							this.islet=true;
 						}
@@ -407,7 +407,7 @@ private boolean printDebug=false;
 	    			if (this.tableControl[i][j]==0){
 						if (islet(i, j, player)){if(this.printDebug){System.out.println("a");}
 							this.tableControl[i][j]=noPlayer;
-							//this.tableControl[i][j]=caca;caca++;//player.player();
+							//this.tableControl[i][j]=cac;cac++;//player.player();
 							nbModifsI++;//position à vérifier
 							this.islet=true;
 						}
@@ -489,7 +489,7 @@ private boolean printDebug=false;
 		}	
 		
 	//——————————————————————————————————————————
-	//———————————————————————————————————The End (n'essaie pas de comprendre la suite, ça sert à rien :) )
+	//———————————————————————————————————The End 
 	//——————————————————————————————————————————	
 	
 	

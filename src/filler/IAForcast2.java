@@ -69,7 +69,7 @@ public class IAForcast2 {
 		else{
 			this.etape1=33;
 			this.etape2=38;
-			this.etape3=47;
+			this.etape3=46;
 		}
 		if (nbControledtiles>this.etape3){
 			this.bestChoice=getBestChoice(board,ia);
@@ -157,7 +157,7 @@ public void setBestChoice(int newChoice) {
 							}
 							if (profondeurDeTest>3){
 								if(profondeurDeTest==4){
-									this.allmyBPossibilities[a][u][i][e][p].setIslet(true);
+									//this.allmyBPossibilities[a][u][i][e][p].setIslet(true);
 								}
 								//System.out.println("4  "+this.allmyBPossibilities[a][u][i][e][p].getIslet());
 								fill(a,u,i,e,p,e);

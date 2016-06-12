@@ -25,15 +25,19 @@ public class Main {
 	
 
 
-	static Scanner sc  = new Scanner(System.in);	
+	static Scanner sc  =  new Scanner(System.in);	
 	
-	static boolean graphicDisplay=false;
+	
+	
+	//variables de déboguage
+	
+	static boolean graphicDisplay=true;
 	static boolean consoleDisplay=false;
 	static boolean onlyResultDisplay=false;
 	
-	static boolean autoset =true;
+	static boolean autoset =false;
 	
-	static boolean playConnected=true;//connnector projet IA
+	static boolean playConnected=false;//connnector //(exxp concours IA)
 	
 	static int g1=0;//nombre de point par joureur
 	static int g2=0;
